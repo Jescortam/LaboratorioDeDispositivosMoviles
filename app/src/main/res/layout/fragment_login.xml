@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".LoginFragment">
+
+    <RelativeLayout
+        android:background="@drawable/background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/logoLayout"
+            android:layout_marginTop="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/imageViewCompanyPlaceholder"
+                android:layout_width="wrap_content"
+                android:layout_height="150dp"
+                android:layout_centerHorizontal="true"
+                app:srcCompat="@drawable/company_placeholder" />
+
+            <TextView
+                android:id="@+id/textViewCompanyName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/imageViewCompanyPlaceholder"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="@string/companyNamePlaceholder"
+                android:textColor="@color/black"
+                android:textSize="25sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/formLayout"
+            android:layout_below="@id/logoLayout"
+            android:layout_marginTop="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/emailLayout"
+                android:layout_marginStart="60dp"
+                android:layout_marginEnd="60dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/textViewEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:text="@string/email" />
+
+                <EditText
+                    android:id="@+id/editTextEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textViewEmail"
+                    android:autofillHints="true"
+                    android:ems="10"
+                    android:hint="@string/email"
+                    android:inputType="textEmailAddress"
+                    android:textSize="20sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/passwordLayout"
+                android:layout_below="@+id/emailLayout"
+                android:layout_marginStart="60dp"
+                android:layout_marginEnd="60dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/textViewPassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:text="@string/password" />
+
+                <EditText
+                    android:id="@+id/editTextPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textViewPassword"
+                    android:autofillHints="true"
+                    android:ems="10"
+                    android:hint="@string/password"
+                    android:inputType="textPassword"
+                    android:textSize="20sp" />
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/buttonLogin"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/passwordLayout"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="50dp"
+                android:text="@string/login"
+                app:cornerRadius="20dp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+</FrameLayout>

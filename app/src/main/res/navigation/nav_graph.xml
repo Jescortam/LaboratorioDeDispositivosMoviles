@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph.xml"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.laboratoriodedispositivosmoviles.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_inventoryFragment"
+            app:destination="@id/inventoryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/inventoryFragment"
+        android:name="com.example.laboratoriodedispositivosmoviles.InventoryFragment"
+        android:label="fragment_inventory"
+        tools:layout="@layout/fragment_inventory" >
+        <action
+            android:id="@+id/action_inventoryFragment_to_addDataFragment"
+            app:destination="@id/addDataFragment" />
+        <action
+            android:id="@+id/action_inventoryFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addDataFragment"
+        android:name="com.example.laboratoriodedispositivosmoviles.AddDataFragment"
+        android:label="fragment_add_data"
+        tools:layout="@layout/fragment_add_data" >
+        <action
+            android:id="@+id/action_addDataFragment_to_addImageFragment"
+            app:destination="@id/addImageFragment" />
+        <action
+            android:id="@+id/action_addDataFragment_to_inventoryFragment"
+            app:destination="@id/inventoryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addImageFragment"
+        android:name="com.example.laboratoriodedispositivosmoviles.AddImageFragment"
+        android:label="fragment_add_image"
+        tools:layout="@layout/fragment_add_image" >
+        <action
+            android:id="@+id/action_addImageFragment_to_addDataFragment"
+            app:destination="@id/addDataFragment" />
+        <action
+            android:id="@+id/action_addImageFragment_to_printQrFragment"
+            app:destination="@id/printQrFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/printQrFragment"
+        android:name="com.example.laboratoriodedispositivosmoviles.PrintQrFragment"
+        android:label="fragment_print_qr"
+        tools:layout="@layout/fragment_print_qr" >
+        <action
+            android:id="@+id/action_printQrFragment_to_inventoryFragment"
+            app:destination="@id/inventoryFragment" />
+    </fragment>
+</navigation>

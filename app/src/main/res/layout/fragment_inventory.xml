@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".InventoryFragment">
+
+    <RelativeLayout
+        android:background="@drawable/background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/navbarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:paddingHorizontal="20dp"
+            android:gravity="center"
+            android:background="@color/orange_500"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/inventarioButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="60dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/inventario"
+                android:background="@drawable/roundcorner"
+                android:contentDescription="@string/inventarioButtonDescription" />
+
+            <ImageButton
+                android:id="@+id/agregarButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="60dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/agregar_icon"
+                android:background="@drawable/roundcorner"
+                android:contentDescription="@string/agregarButtonDescription" />
+
+            <ImageButton
+                android:id="@+id/escanearButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/qricon"
+                android:background="@drawable/roundcorner"
+                android:contentDescription="@string/escanearButtonDescription" />
+
+            <ImageButton
+                android:id="@+id/logoutButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="60dp"
+                android:backgroundTint="@color/orange_500"
+                android:contentDescription="@string/logoutButtonDescription"
+                android:padding="2dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/logout" />
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/navbarLayout"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/navbarLayout" />
+    </RelativeLayout>
+
+</FrameLayout>

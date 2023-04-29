@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".AddImageFragment">
+
+    <RelativeLayout
+        android:background="@drawable/background"
+        android:paddingVertical="20dp"
+        android:paddingHorizontal="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textViewCargarImagen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            android:text="@string/cargar_imagen" />
+
+        <RelativeLayout
+            android:id="@+id/buttonsLayout"
+            android:layout_marginTop="20dp"
+            android:layout_below="@id/textViewCargarImagen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/buttonCamara"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:text="@string/camara"
+                app:cornerRadius="20dp" />
+
+            <Button
+                android:id="@+id/buttonGaleria"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="@string/galeria"
+                app:cornerRadius="20dp" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/imageViewCargarImagen"
+            android:layout_width="wrap_content"
+            android:layout_height="400dp"
+            android:layout_below="@id/buttonsLayout"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/border"
+            app:srcCompat="@drawable/pluma_bic"
+            android:contentDescription="@string/imagen_del_consumible" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginBottom="20dp">
+
+            <Button
+                android:id="@+id/buttonAtras"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:backgroundTint="@color/orange_200"
+                android:text="@string/atras"
+                android:textColor="@color/black"
+                app:cornerRadius="20dp" />
+
+            <Button
+                android:id="@+id/buttonAgregar"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="@string/agregar"
+                app:cornerRadius="20dp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+</FrameLayout>
