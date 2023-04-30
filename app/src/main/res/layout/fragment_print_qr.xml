@@ -7,7 +7,6 @@
     tools:context=".PrintQrFragment">
 
     <RelativeLayout
-        android:background="@drawable/background"
         android:paddingHorizontal="20dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

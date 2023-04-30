@@ -7,7 +7,6 @@
     tools:context=".AddImageFragment">
 
     <RelativeLayout
-        android:background="@drawable/background"
         android:paddingVertical="20dp"
         android:paddingHorizontal="20dp"
         android:layout_width="match_parent"
