@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -11,21 +14,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LaboratorioDeDispositivosMoviles"
         tools:targetApi="31">
-        <activity
-            android:name=".ActivityAgregar3"
-            android:exported="false" />
-        <activity
-            android:name=".ActivityAgregar2"
-            android:exported="false" />
-        <activity
-            android:name=".ActivityAgregar"
-            android:exported="false" />
-        <activity
-            android:name=".ActivityInventario"
-            android:exported="false" />
-        <activity
-            android:name=".ActivityLogin"
-            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

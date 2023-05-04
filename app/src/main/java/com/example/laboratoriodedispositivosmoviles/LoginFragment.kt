@@ -25,6 +25,10 @@ class LoginFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         auth = Firebase.auth
+
+//        if (auth.currentUser != null) {
+//            goToInventory()
+//        }
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,24 +40,28 @@ class LoginFragment : Fragment() {
         editTextPassword = root.findViewById(R.id.editTextPassword)
         buttonLogin = root.findViewById(R.id.buttonLogin)
 
-        buttonLogin.setOnClickListener { login(root) }
+        buttonLogin.setOnClickListener { login() }
 
         return root
     }
 
-    private fun login(root: ViewGroup) {
+    private fun login() {
         if (editTextEmail.text.isNotEmpty() && editTextPassword.text.isNotEmpty()) {
             auth.signInWithEmailAndPassword(
                 editTextEmail.text.toString(),
                 editTextPassword.text.toString()
             ).addOnCompleteListener {
                 if (it.isSuccessful) {
-                    val action = LoginFragmentDirections.actionLoginFragmentToInventoryFragment()
-                    root.findNavController().navigate(action)
+                    goToInventory()
                 } else {
                     Toast.makeText(activity, "Error: Intente nuevamente", Toast.LENGTH_SHORT).show()
                 }
             }
         }
+    }
+
+    private fun goToInventory() {
+        val action = LoginFragmentDirections.actionLoginFragmentToInventoryFragment()
+        root.findNavController().navigate(action)
     }
 }

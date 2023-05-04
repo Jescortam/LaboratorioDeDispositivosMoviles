@@ -7,15 +7,16 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.example.laboratoriodedispositivosmoviles.R
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import layout.com.example.laboratoriodedispositivosmoviles.Product
 
-class ProductAdapter(var products: Array<Product>): RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
+class ProductAdapter(var products: ArrayList<Product>): RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
 
-    val image = R.drawable.pluma_bic
+    private lateinit var glideRef: RequestManager
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var productImage: ImageView
@@ -41,12 +42,19 @@ class ProductAdapter(var products: Array<Product>): RecyclerView.Adapter<Product
         val view = LayoutInflater.from(viewGroup.context)
             .inflate(R.layout.product_layout, viewGroup, false)
 
+        glideRef = Glide.with(view)
+
         return ViewHolder(view)
     }
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        viewHolder.productImage.setImageResource(image)
+        val storageRef = Firebase.storage.reference
+
+        storageRef.child(products[position].image).downloadUrl.addOnSuccessListener { uri ->
+            glideRef.load(uri).into(viewHolder.productImage)
+        }
+
         viewHolder.productName.text = products[position].name
         viewHolder.productId.text = "Código: ${products[position].id}"
         viewHolder.productQuantity.text = "Cantidad: ${products[position].quantity}"

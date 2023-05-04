@@ -43,16 +43,16 @@
             android:background="@drawable/border"
             android:contentDescription="@string/imagen_del_consumible"
             android:foregroundGravity="center"
-            app:srcCompat="@drawable/qrcode" />
+            app:srcCompat="@drawable/blank" />
 
         <Button
-            android:id="@+id/buttonImprimir"
+            android:id="@+id/buttonDescargar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/imageViewCodigoQr"
             android:layout_marginTop="30dp"
             android:textSize="30sp"
-            android:text="@string/imprimir"
+            android:text="@string/descargar"
             app:cornerRadius="20dp" />
 
         <RelativeLayout

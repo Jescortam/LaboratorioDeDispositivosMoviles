@@ -56,4 +56,5 @@
     <string name="codigo_ejemplo">Código: 123123123</string>
     <string name="observaciones_ejemplo">Observaciones: En buen estado</string>
     <string name="agregar">Agregar</string>
+    <string name="descargar">Descargar</string>
 </resources>

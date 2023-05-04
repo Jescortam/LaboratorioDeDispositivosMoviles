@@ -13,6 +13,8 @@ import android.widget.Toast
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -24,6 +26,8 @@ import layout.ProductAdapter
 import layout.com.example.laboratoriodedispositivosmoviles.Product
 
 class InventoryFragment : Fragment() {
+    private lateinit var auth: FirebaseAuth
+
     lateinit var root: ViewGroup
 
     private lateinit var logoutButton: ImageButton
@@ -36,7 +40,9 @@ class InventoryFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        adapter = ProductAdapter(arrayOf())
+        adapter = ProductAdapter(arrayListOf())
+
+        auth = Firebase.auth
 
         databaseSetup()
     }
@@ -69,7 +75,7 @@ class InventoryFragment : Fragment() {
 
         val childEventListener = object : ChildEventListener {
             override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
-                Log.d(ContentValues.TAG, "onChildAdded:$dataSnapshot")
+                Log.d(ContentValues.TAG, "onChildAdded223:$dataSnapshot")
 
                 val data = dataSnapshot.value as HashMap<*, *>
                 val product = parseHashMap(dataSnapshot.key!!, data)
@@ -79,24 +85,30 @@ class InventoryFragment : Fragment() {
             }
 
             override fun onChildChanged(dataSnapshot: DataSnapshot, previousChildName: String?) {
-                Log.d(ContentValues.TAG, "onChildChanged:" + dataSnapshot.key)
-
                 var i = 0
                 while (i < adapter.products.size) {
                     if (adapter.products[i].id == dataSnapshot.key) {
                         val data = dataSnapshot.value as HashMap<*, *>
                         adapter.products[i] = parseHashMap(dataSnapshot.key!!, data)
+                        adapter.notifyItemChanged(i)
                         break
                     }
 
                     i++
                 }
-
-                adapter.notifyItemChanged(i)
             }
 
             override fun onChildRemoved(dataSnapshot: DataSnapshot) {
-                Log.d(ContentValues.TAG, "onChildRemoved:" + dataSnapshot.key!!)
+                var i = 0
+                while (i < adapter.products.size) {
+                    if (adapter.products[i].id == dataSnapshot.key) {
+                        adapter.products.removeAt(i)
+                        adapter.notifyItemRemoved(i)
+                        break
+                    }
+
+                    i++
+                }
             }
 
             override fun onChildMoved(dataSnapshot: DataSnapshot, previousChildName: String?) {
@@ -113,21 +125,27 @@ class InventoryFragment : Fragment() {
     }
 
     private fun parseHashMap(id: String, data: HashMap<*, *>): Product {
+        val price: Double = if (data["price"] is Long) {
+            (data["price"] as Long).toDouble()
+        } else {
+            data["price"] as Double
+        }
+
         return Product(
             id,
             data["image"] as String,
             data["name"] as String,
-            data["quantity"] as Number,
+            (data["quantity"] as Long).toInt(),
             data["type"] as String,
-            data["price"] as Number,
+            price,
             data["details"] as String,
         )
     }
 
     private fun scan() {
-//        val integrator = IntentIntegrator(activity)
-//        integrator.setPrompt("Escanea el código QR")
-//        integrator.initiateScan()
+        val integrator = IntentIntegrator(activity)
+        integrator.setPrompt("Escanea el código QR")
+        integrator.initiateScan()
     }
 
     @Deprecated("Deprecated in Java")
@@ -149,9 +167,16 @@ class InventoryFragment : Fragment() {
     }
 
     private fun logout() {
+        Firebase.auth.signOut()
+
+        goToLogin()
+    }
+
+    private fun goToLogin() {
         val action = InventoryFragmentDirections.actionInventoryFragmentToLoginFragment()
         root.findNavController().navigate(action)
     }
+
 
     private fun addProduct() {
         val action = InventoryFragmentDirections.actionInventoryFragmentToAddDataFragment()

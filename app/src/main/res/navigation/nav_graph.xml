@@ -49,14 +49,20 @@
         <action
             android:id="@+id/action_addImageFragment_to_printQrFragment"
             app:destination="@id/printQrFragment" />
+        <argument
+            android:name="parsedProduct"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/printQrFragment"
         android:name="com.example.laboratoriodedispositivosmoviles.PrintQrFragment"
         android:label="fragment_print_qr"
-        tools:layout="@layout/fragment_print_qr" >
+        tools:layout="@layout/fragment_get_qr" >
         <action
             android:id="@+id/action_printQrFragment_to_inventoryFragment"
             app:destination="@id/inventoryFragment" />
+        <argument
+            android:name="product"
+            app:argType="string" />
     </fragment>
 </navigation>

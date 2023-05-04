@@ -135,7 +135,7 @@
                 android:layout_toEndOf="@id/textViewPrecio"
                 android:layout_alignParentEnd="true"
                 android:ems="10"
-                android:inputType="text"
+                android:inputType="numberDecimal"
                 android:hint="@string/precio_hint"
                 android:autofillHints="false" />
         </RelativeLayout>

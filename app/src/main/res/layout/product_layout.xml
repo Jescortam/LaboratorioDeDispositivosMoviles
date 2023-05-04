@@ -22,7 +22,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginVertical="10dp"
             android:layout_marginStart="10dp"
-            card_view:srcCompat="@drawable/pepsi" />
+            card_view:srcCompat="@drawable/blank" />
 
         <TextView
             android:id="@+id/productNameTextView"

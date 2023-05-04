@@ -20,16 +20,6 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/inventarioButton"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="60dp"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/inventario"
-                android:background="@drawable/roundcorner"
-                android:contentDescription="@string/inventarioButtonDescription" />
-
-            <ImageButton
                 android:id="@+id/agregarButton"
                 android:layout_width="0dp"
                 android:layout_weight="1"
