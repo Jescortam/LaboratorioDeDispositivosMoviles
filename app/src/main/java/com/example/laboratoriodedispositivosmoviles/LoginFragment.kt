@@ -25,10 +25,6 @@ class LoginFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         auth = Firebase.auth
-
-//        if (auth.currentUser != null) {
-//            goToInventory()
-//        }
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

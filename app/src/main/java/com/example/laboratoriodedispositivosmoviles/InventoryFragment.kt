@@ -70,6 +70,14 @@ class InventoryFragment : Fragment() {
         return root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        if (auth.currentUser == null) {
+            goToLogin()
+        }
+    }
+
     private fun databaseSetup() {
         database = Firebase.database.getReference("/products")
 
