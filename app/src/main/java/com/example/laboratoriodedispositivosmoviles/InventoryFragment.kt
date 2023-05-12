@@ -50,7 +50,7 @@ class InventoryFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         root = inflater.inflate(R.layout.fragment_inventory, container, false) as ViewGroup
 
         logoutButton = root.findViewById(R.id.logoutButton)
@@ -61,6 +61,7 @@ class InventoryFragment : Fragment() {
 
         escanearButton = root.findViewById(R.id.escanearButton)
         escanearButton.setOnClickListener { scan() }
+//        escanearButton.setOnClickListener { goToEditData("4b749f40-c7e1-4e3f-aae2-8ba726633a5b") }
 
         recyclerView = root.findViewById(R.id.recyclerView)
 
@@ -75,6 +76,7 @@ class InventoryFragment : Fragment() {
 
         if (auth.currentUser == null) {
             goToLogin()
+            return
         }
     }
 
@@ -83,8 +85,6 @@ class InventoryFragment : Fragment() {
 
         val childEventListener = object : ChildEventListener {
             override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
-                Log.d(ContentValues.TAG, "onChildAdded223:$dataSnapshot")
-
                 val data = dataSnapshot.value as HashMap<*, *>
                 val product = parseHashMap(dataSnapshot.key!!, data)
 
@@ -119,16 +119,11 @@ class InventoryFragment : Fragment() {
                 }
             }
 
-            override fun onChildMoved(dataSnapshot: DataSnapshot, previousChildName: String?) {
-                Log.d(ContentValues.TAG, "onChildMoved:" + dataSnapshot.key!!)
-            }
+            override fun onChildMoved(dataSnapshot: DataSnapshot, previousChildName: String?) {}
 
-            override fun onCancelled(databaseError: DatabaseError) {
-                Log.w(ContentValues.TAG, "postComments:onCancelled", databaseError.toException())
-                Toast.makeText(activity, "Error al cargar los productos.",
-                    Toast.LENGTH_SHORT).show()
-            }
+            override fun onCancelled(databaseError: DatabaseError) {}
         }
+
         database.addChildEventListener(childEventListener)
     }
 
@@ -161,11 +156,7 @@ class InventoryFragment : Fragment() {
         val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
         if (result != null) {
             if (result.contents != null) {
-                Toast.makeText(
-                    activity,
-                    "Código escaneado: ${result.contents}",
-                    Toast.LENGTH_SHORT
-                ).show()
+                goToEditData(result.contents)
             } else {
                 Toast.makeText(activity, "Operación cancelada", Toast.LENGTH_SHORT).show()
             }
@@ -188,6 +179,11 @@ class InventoryFragment : Fragment() {
 
     private fun addProduct() {
         val action = InventoryFragmentDirections.actionInventoryFragmentToAddDataFragment()
+        root.findNavController().navigate(action)
+    }
+
+    private fun goToEditData(productId: String) {
+        val action = InventoryFragmentDirections.actionInventoryFragmentToEditDataFragment(productId)
         root.findNavController().navigate(action)
     }
 }

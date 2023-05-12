@@ -1,5 +1,6 @@
 package com.example.laboratoriodedispositivosmoviles
 
+import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.graphics.Bitmap
@@ -16,6 +17,8 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.navigation.findNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -26,16 +29,18 @@ import com.google.gson.reflect.TypeToken
 import layout.com.example.laboratoriodedispositivosmoviles.Product
 import java.io.ByteArrayOutputStream
 
-class AddImageFragment : Fragment() {
+class EditImageFragment : Fragment() {
     companion object {
         const val PARSED_PRODUCT = "parsedProduct"
     }
 
-    private lateinit var database: DatabaseReference
+    private lateinit var imageUri: Uri
+    private lateinit var glideRef: RequestManager
     private lateinit var parsedProduct: String
+    private lateinit var product: Product
+    private lateinit var database: DatabaseReference
     private lateinit var storage: FirebaseStorage
     private lateinit var root: ViewGroup
-    private lateinit var imageUri: Uri
     private lateinit var buttonCamara: Button
     private lateinit var buttonGaleria: Button
     private lateinit var buttonAtras: Button
@@ -44,27 +49,34 @@ class AddImageFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         arguments?.let {
             parsedProduct = it.getString(PARSED_PRODUCT).toString()
         }
 
         database = Firebase.database.reference
+        product = Gson().fromJson(parsedProduct, object: TypeToken<Product>(){}.type)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        root = inflater.inflate(R.layout.fragment_add_image, container, false) as ViewGroup
+        root = inflater.inflate(R.layout.fragment_edit_image, container, false) as ViewGroup
+
+        glideRef = Glide.with(root)
+
+        val storageRef = Firebase.storage.reference
 
         buttonAtras = root.findViewById(R.id.buttonAtras)
         buttonAtras.setOnClickListener { goBack() }
 
         buttonAgregar = root.findViewById(R.id.buttonAgregar)
-        buttonAgregar.setOnClickListener { addProduct(parsedProduct) }
+        buttonAgregar.setOnClickListener { editProduct() }
 
         imageViewCargarImagen = root.findViewById(R.id.imageViewCargarImagen)
+        storageRef.child(product.image).downloadUrl.addOnSuccessListener { uri ->
+            glideRef.load(uri).into(imageViewCargarImagen)
+        }
 
         buttonCamara = root.findViewById(R.id.buttonCamara)
         buttonCamara.setOnClickListener { chooseImageFromCamera() }
@@ -99,42 +111,45 @@ class AddImageFragment : Fragment() {
         }
     }
 
-    private fun goBack() {
-        val action = AddImageFragmentDirections.actionAddImageFragmentToAddDataFragment()
-        root.findNavController().navigate(action)
-    }
-
-    private fun addProduct(parsedProduct: String) {
-        val product: Product = Gson().fromJson(parsedProduct, object: TypeToken<Product>(){}.type)
-
+    private fun editProduct() {
         storage = Firebase.storage
         val storageRef = storage.reference
-        val pathString = "images/IMG_${product.id}.jpg"
-        val imageRef = storageRef.child(pathString)
 
-        imageViewCargarImagen.isDrawingCacheEnabled = true
-        imageViewCargarImagen.buildDrawingCache()
-        val bitmap = (imageViewCargarImagen.drawable as BitmapDrawable).bitmap
-        val baos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-        val data = baos.toByteArray()
+        storageRef.child(product.image).delete().addOnSuccessListener {
+            val pathString = "images/IMG_${product.id}.jpg"
+            val imageRef = storageRef.child(pathString)
 
-        val uploadTask = imageRef.putBytes(data)
-        uploadTask.addOnFailureListener {
-            Log.d(TAG, "Failure on image uplaod")
-        }.addOnSuccessListener {
-            Log.d(TAG, "successful image upload")
-        }
+            imageViewCargarImagen.isDrawingCacheEnabled = true
+            imageViewCargarImagen.buildDrawingCache()
+            val bitmap = (imageViewCargarImagen.drawable as BitmapDrawable).bitmap
+            val baos = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+            val data = baos.toByteArray()
 
-        product.image = pathString
+            val uploadTask = imageRef.putBytes(data)
+            uploadTask.addOnFailureListener {
+                Log.d(TAG, "Failure on image uplaod")
+            }.addOnSuccessListener {
+                Log.d(TAG, "successful image upload")
+            }
 
-        database.child("products").child(product.id).setValue(product).addOnCompleteListener {
-            Toast.makeText(activity, "Producto agregado de manera exitosa", Toast.LENGTH_SHORT).show()
+            product.image = pathString
+
+            database.child("products").child(product.id).setValue(product).addOnCompleteListener {
+                Toast.makeText(activity, "Producto editado de manera exitosa", Toast.LENGTH_SHORT).show()
+            }.addOnFailureListener {
+                Toast.makeText(activity, "Error en la edición del producto", Toast.LENGTH_SHORT).show()
+            }
+
+            val action = EditImageFragmentDirections.actionEditImageFragmentToInventoryFragment()
+            root.findNavController().navigate(action)
         }.addOnFailureListener {
-            Toast.makeText(activity, "Error en la publicación del producto", Toast.LENGTH_SHORT).show()
+            Log.d(TAG, "Error on deleting old file")
         }
+    }
 
-        val action = AddImageFragmentDirections.actionAddImageFragmentToPrintQrFragment(product.id)
+    private fun goBack() {
+        val action = EditImageFragmentDirections.actionEditImageFragmentToEditDataFragment(product.id)
         root.findNavController().navigate(action)
     }
 }

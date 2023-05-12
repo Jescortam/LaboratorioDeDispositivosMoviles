@@ -7,16 +7,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.navigation.findNavController
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import layout.com.example.laboratoriodedispositivosmoviles.Product
-import java.util.*
+import kotlin.collections.HashMap
 
-class AddDataFragment : Fragment() {
+private const val PRODUCT = "product"
 
+class EditDataFragment : Fragment() {
+    private lateinit var productId: String
+    private lateinit var data: HashMap<*, *>
+    private lateinit var database: DatabaseReference
     private lateinit var root: ViewGroup
-
     private lateinit var editTextNombre: EditText
     private lateinit var editTextCantidad: EditText
     private lateinit var editTextTipo: EditText
@@ -27,33 +34,57 @@ class AddDataFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        arguments?.let {
+            productId = it.getString(PRODUCT).toString()
+        }
 
+        database = Firebase.database.reference
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        root = inflater.inflate(R.layout.fragment_add_data, container, false) as ViewGroup
+    ): View {
+        root = inflater.inflate(R.layout.fragment_edit_data, container, false) as ViewGroup
 
-        editTextNombre = root.findViewById(R.id.editTextNombre)
-        editTextCantidad = root.findViewById(R.id.editTextCantidad)
-        editTextTipo = root.findViewById(R.id.editTextTipo)
-        editTextPrecio = root.findViewById(R.id.editTextPrecio)
-        editTextObservaciones = root.findViewById(R.id.editTextObservaciones)
-
-        buttonSiguiente = root.findViewById(R.id.buttonSiguiente)
-        buttonSiguiente.setOnClickListener { addData() }
-
-        buttonSalir = root.findViewById(R.id.buttonSalir)
-        buttonSalir.setOnClickListener { exit() }
+        getProductData()
 
         return root
     }
 
-    private fun addData() {
-        val id = UUID.randomUUID().toString()
+    fun getProductData() {
+        database.child("products").child(productId).get().addOnSuccessListener {
+            data = it.value as HashMap<*, *>
+            initFormWithData(data)
+        }.addOnFailureListener {
+            Toast.makeText(activity, "Error al buscar el producto", Toast.LENGTH_SHORT).show()
+        }
+    }
 
+    private fun initFormWithData(data: HashMap<*, *>) {
+        editTextNombre = root.findViewById(R.id.editTextNombre)
+        editTextNombre.setText(data["name"].toString())
+
+        editTextCantidad = root.findViewById(R.id.editTextCantidad)
+        editTextCantidad.setText(data["quantity"].toString())
+
+        editTextTipo = root.findViewById(R.id.editTextTipo)
+        editTextTipo.setText(data["type"].toString())
+
+        editTextPrecio = root.findViewById(R.id.editTextPrecio)
+        editTextPrecio.setText(data["price"].toString())
+
+        editTextObservaciones = root.findViewById(R.id.editTextObservaciones)
+        editTextObservaciones.setText(data["details"].toString())
+
+        buttonSiguiente = root.findViewById(R.id.buttonSiguiente)
+        buttonSiguiente.setOnClickListener { editData() }
+
+        buttonSalir = root.findViewById(R.id.buttonSalir)
+        buttonSalir.setOnClickListener { exit() }
+    }
+
+    private fun editData() {
         val nombre = editTextNombre.text
         val cantidad = editTextCantidad.text.toString().toIntOrNull()
         val tipo = editTextTipo.text
@@ -62,8 +93,8 @@ class AddDataFragment : Fragment() {
 
         if (nombre.isNotEmpty() && cantidad != null && tipo.isNotEmpty() &&
             precio != null && observaciones.isNotEmpty()) {
-            val product = Product(id,
-                "",
+            val product = Product(productId,
+                data["image"].toString(),
                 nombre.toString(),
                 cantidad,
                 tipo.toString(),
@@ -76,13 +107,12 @@ class AddDataFragment : Fragment() {
 
     private fun goNext(product: Product) {
         val parsedProduct = Gson().toJson(product, object: TypeToken<Product>(){}.type)
-        val action = AddDataFragmentDirections.actionAddDataFragmentToAddImageFragment(parsedProduct)
+        val action = EditDataFragmentDirections.actionEditDataFragmentToEditImageFragment(parsedProduct)
         root.findNavController().navigate(action)
     }
 
     private fun exit() {
-        val action = AddDataFragmentDirections.actionAddDataFragmentToInventoryFragment()
+        val action = EditDataFragmentDirections.actionEditDataFragmentToInventoryFragment()
         root.findNavController().navigate(action)
     }
-
 }

@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_inventoryFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_inventoryFragment_to_editDataFragment"
+            app:destination="@id/editDataFragment" />
     </fragment>
     <fragment
         android:id="@+id/addDataFragment"
@@ -63,6 +66,36 @@
             app:destination="@id/inventoryFragment" />
         <argument
             android:name="product"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/editDataFragment"
+        android:name="com.example.laboratoriodedispositivosmoviles.EditDataFragment"
+        android:label="fragment_edit_data"
+        tools:layout="@layout/fragment_edit_data" >
+        <argument
+            android:name="product"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_editDataFragment_to_inventoryFragment"
+            app:destination="@id/inventoryFragment" />
+        <action
+            android:id="@+id/action_editDataFragment_to_editImageFragment"
+            app:destination="@id/editImageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editImageFragment"
+        android:name="com.example.laboratoriodedispositivosmoviles.EditImageFragment"
+        android:label="fragment_edit_image"
+        tools:layout="@layout/fragment_edit_image" >
+        <action
+            android:id="@+id/action_editImageFragment_to_editDataFragment"
+            app:destination="@id/editDataFragment" />
+        <action
+            android:id="@+id/action_editImageFragment_to_inventoryFragment"
+            app:destination="@id/inventoryFragment" />
+        <argument
+            android:name="parsedProduct"
             app:argType="string" />
     </fragment>
 </navigation>

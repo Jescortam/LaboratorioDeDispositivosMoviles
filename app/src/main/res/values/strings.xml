@@ -57,4 +57,7 @@
     <string name="observaciones_ejemplo">Observaciones: En buen estado</string>
     <string name="agregar">Agregar</string>
     <string name="descargar">Descargar</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="editar_costumible">Editar consumible</string>
+    <string name="editar">Editar</string>
 </resources>
