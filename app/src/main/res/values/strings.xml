@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Laboratorio de Dispositivos Moviles</string>
+    <string name="app_name">Imprenta Express</string>
     <string name="activity1">Activity1</string>
     <string name="go_to_activity_2">Go to Activity 2</string>
     <string name="activity2">Activity 2</string>
@@ -60,4 +60,5 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="editar_costumible">Editar consumible</string>
     <string name="editar">Editar</string>
+    <string name="imprenta_express">Imprenta Express</string>
 </resources>
