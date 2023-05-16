@@ -61,11 +61,11 @@ class InventoryFragment : Fragment() {
 
         escanearButton = root.findViewById(R.id.escanearButton)
         escanearButton.setOnClickListener { scan() }
-//        escanearButton.setOnClickListener { goToEditData("4b749f40-c7e1-4e3f-aae2-8ba726633a5b") }
+//        escanearButton.setOnClickListener { goToEditData("107a067f-21cd-4f56-af18-acc31107be74") }
 
         recyclerView = root.findViewById(R.id.recyclerView)
 
-        recyclerView.layoutManager = LinearLayoutManager(activity)
+        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.adapter = adapter
 
         return root
@@ -146,7 +146,7 @@ class InventoryFragment : Fragment() {
     }
 
     private fun scan() {
-        val integrator = IntentIntegrator(activity)
+        val integrator = IntentIntegrator.forSupportFragment(this)
         integrator.setPrompt("Escanea el código QR")
         integrator.initiateScan()
     }
