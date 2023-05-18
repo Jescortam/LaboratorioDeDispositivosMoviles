@@ -1,74 +1,59 @@
 package com.example.laboratoriodedispositivosmoviles
 
-import android.content.ContentValues
-import android.content.Intent
+import android.app.Activity
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.example.laboratoriodedispositivosmoviles.databinding.FragmentInventoryBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.zxing.integration.android.IntentIntegrator
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import layout.ProductAdapter
-import layout.com.example.laboratoriodedispositivosmoviles.Product
+import layout.com.example.laboratoriodedispositivosmoviles.InventoryMovementHandler
+import layout.com.example.laboratoriodedispositivosmoviles.ProductCardClickListener
+import layout.com.example.laboratoriodedispositivosmoviles.ProductDatabase
+import kotlin.coroutines.CoroutineContext
 
-class InventoryFragment : Fragment() {
+class InventoryFragment : Fragment(), ProductCardClickListener, CoroutineScope {
+    private var job: Job = Job()
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
+
+    private var _binding: FragmentInventoryBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var auth: FirebaseAuth
-
-    lateinit var root: ViewGroup
-
-    private lateinit var logoutButton: ImageButton
-    private lateinit var agregarButton: ImageButton
-    private lateinit var escanearButton: ImageButton
-    private lateinit var database: DatabaseReference
-    lateinit var recyclerView: RecyclerView
-    lateinit var adapter: ProductAdapter
+    private lateinit var productDatabase: ProductDatabase
+    private lateinit var adapter: ProductAdapter
+    private lateinit var requestLabel: String
+    private lateinit var inventoryMovementHandler: InventoryMovementHandler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        adapter = ProductAdapter(arrayListOf())
+        adapter = ProductAdapter(arrayListOf(), this)
 
         auth = Firebase.auth
-
-        databaseSetup()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        root = inflater.inflate(R.layout.fragment_inventory, container, false) as ViewGroup
-
-        logoutButton = root.findViewById(R.id.logoutButton)
-        logoutButton.setOnClickListener { logout() }
-
-        agregarButton = root.findViewById(R.id.agregarButton)
-        agregarButton.setOnClickListener { addProduct() }
-
-        escanearButton = root.findViewById(R.id.escanearButton)
-        escanearButton.setOnClickListener { scan() }
-//        escanearButton.setOnClickListener { goToEditData("107a067f-21cd-4f56-af18-acc31107be74") }
-
-        recyclerView = root.findViewById(R.id.recyclerView)
-
-        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        recyclerView.adapter = adapter
-
-        return root
+        _binding = FragmentInventoryBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -78,112 +63,92 @@ class InventoryFragment : Fragment() {
             goToLogin()
             return
         }
+
+        productDatabase = ProductDatabase(requireActivity())
+        productDatabase.setChildEventListener(adapter)
+
+        inventoryMovementHandler = InventoryMovementHandler(requireActivity())
+
+        binding.logoutButton.setOnClickListener { logout() }
+        binding.agregarButton.setOnClickListener { addProduct() }
+        binding.escanearButton.setOnClickListener { scanAndView() }
+        binding.venderButton.setOnClickListener { scanAndSell() }
+
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+        binding.recyclerView.adapter = adapter
     }
 
-    private fun databaseSetup() {
-        database = Firebase.database.getReference("/products")
-
-        val childEventListener = object : ChildEventListener {
-            override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
-                val data = dataSnapshot.value as HashMap<*, *>
-                val product = parseHashMap(dataSnapshot.key!!, data)
-
-                adapter.products += product
-                adapter.notifyItemInserted(adapter.products.size - 1)
-            }
-
-            override fun onChildChanged(dataSnapshot: DataSnapshot, previousChildName: String?) {
-                var i = 0
-                while (i < adapter.products.size) {
-                    if (adapter.products[i].id == dataSnapshot.key) {
-                        val data = dataSnapshot.value as HashMap<*, *>
-                        adapter.products[i] = parseHashMap(dataSnapshot.key!!, data)
-                        adapter.notifyItemChanged(i)
-                        break
-                    }
-
-                    i++
-                }
-            }
-
-            override fun onChildRemoved(dataSnapshot: DataSnapshot) {
-                var i = 0
-                while (i < adapter.products.size) {
-                    if (adapter.products[i].id == dataSnapshot.key) {
-                        adapter.products.removeAt(i)
-                        adapter.notifyItemRemoved(i)
-                        break
-                    }
-
-                    i++
-                }
-            }
-
-            override fun onChildMoved(dataSnapshot: DataSnapshot, previousChildName: String?) {}
-
-            override fun onCancelled(databaseError: DatabaseError) {}
-        }
-
-        database.addChildEventListener(childEventListener)
+    override fun onDestroy() {
+        super.onDestroy()
+        job.cancel()
     }
 
-    private fun parseHashMap(id: String, data: HashMap<*, *>): Product {
-        val price: Double = if (data["price"] is Long) {
-            (data["price"] as Long).toDouble()
-        } else {
-            data["price"] as Double
-        }
-
-        return Product(
-            id,
-            data["image"] as String,
-            data["name"] as String,
-            (data["quantity"] as Long).toInt(),
-            data["type"] as String,
-            price,
-            data["details"] as String,
-        )
+    private fun scanAndView() {
+        requestLabel = "VIEW"
+        scan()
     }
+
+    private fun scanAndSell() {
+        requestLabel = "SELL"
+        scan()
+    }
+
 
     private fun scan() {
-        val integrator = IntentIntegrator.forSupportFragment(this)
-        integrator.setPrompt("Escanea el código QR")
-        integrator.initiateScan()
+        val integrator = IntentIntegrator.forSupportFragment(this).apply {
+            setPrompt("Escanea el código QR")
+            setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
+        }
+        resultLauncher.launch(integrator.createScanIntent())
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
-        if (result != null) {
-            if (result.contents != null) {
-                goToEditData(result.contents)
-            } else {
-                Toast.makeText(activity, "Operación cancelada", Toast.LENGTH_SHORT).show()
+
+    private var resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            launch {
+                handleResult(result)
+            }
+    }
+
+    private suspend fun handleResult(result: ActivityResult) {
+        if (result.resultCode == Activity.RESULT_OK && result.data != null) {
+            val data = result.data.toString()
+            if (requestLabel == "VIEW") {
+                goToEditData(data)
+            } else if (requestLabel == "SELL") {
+                sellProductUnit(data)
             }
         } else {
-            super.onActivityResult(requestCode, resultCode, data)
+            Toast.makeText(activity, "Operación cancelada", Toast.LENGTH_SHORT).show()
         }
+
+    }
+
+    private suspend fun sellProductUnit(productId: String) {
+        inventoryMovementHandler.substract(productId, 1)
+    }
+
+    override suspend fun onProductCardClick(productId: String) {
+        goToEditData(productId)
     }
 
     private fun logout() {
         Firebase.auth.signOut()
-
         goToLogin()
     }
 
     private fun goToLogin() {
         val action = InventoryFragmentDirections.actionInventoryFragmentToLoginFragment()
-        root.findNavController().navigate(action)
+        requireView().findNavController().navigate(action)
     }
-
 
     private fun addProduct() {
         val action = InventoryFragmentDirections.actionInventoryFragmentToAddDataFragment()
-        root.findNavController().navigate(action)
+        requireView().findNavController().navigate(action)
     }
 
     private fun goToEditData(productId: String) {
         val action = InventoryFragmentDirections.actionInventoryFragmentToEditDataFragment(productId)
-        root.findNavController().navigate(action)
+        requireView().findNavController().navigate(action)
     }
 }

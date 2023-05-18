@@ -8,7 +8,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:ignore="UselessParent">
 
         <LinearLayout
             android:id="@+id/navbarLayout"
@@ -39,6 +40,17 @@
                 app:srcCompat="@drawable/qricon"
                 android:background="@drawable/roundcorner"
                 android:contentDescription="@string/escanearButtonDescription" />
+
+            <ImageButton
+                android:id="@+id/venderButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="60dp"
+                android:backgroundTint="@color/orange_500"
+                android:contentDescription="@string/logoutButtonDescription"
+                android:padding="2dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/sell_icon" />
 
             <ImageButton
                 android:id="@+id/logoutButton"

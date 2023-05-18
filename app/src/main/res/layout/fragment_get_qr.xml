@@ -9,24 +9,14 @@
     <RelativeLayout
         android:paddingHorizontal="20dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/textViewListo"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:layout_marginTop="20dp"
-            android:textSize="40sp"
-            android:text="@string/listo_textView" />
+        android:layout_height="match_parent"
+        tools:ignore="UselessParent">
 
         <TextView
             android:id="@+id/textViewCodigoQr"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/textViewListo"
             android:textColor="@color/black"
             android:layout_marginTop="20dp"
             android:textSize="30sp"
@@ -60,6 +50,16 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="20dp">
+
+            <Button
+                android:id="@+id/buttonVerProducto"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:backgroundTint="@color/orange_200"
+                android:text="@string/ver_producto"
+                android:textColor="@color/black"
+                app:cornerRadius="20dp" />
 
             <Button
                 android:id="@+id/buttonSalir"

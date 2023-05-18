@@ -7,13 +7,13 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
@@ -50,7 +50,7 @@ class PrintQrFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         root = inflater.inflate(R.layout.fragment_get_qr, container, false) as ViewGroup
 
         buttonSalir = root.findViewById(R.id.buttonSalir)

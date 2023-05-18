@@ -1,24 +1,21 @@
 package com.example.laboratoriodedispositivosmoviles
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import com.example.laboratoriodedispositivosmoviles.databinding.FragmentLoginBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 class LoginFragment : Fragment() {
-    private lateinit var root: ViewGroup
+    private var _binding: FragmentLoginBinding? = null
+    private val binding get() = _binding!!
 
-    private lateinit var editTextEmail: EditText
-    private lateinit var editTextPassword: EditText
-    private lateinit var buttonLogin: Button
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,38 +23,48 @@ class LoginFragment : Fragment() {
 
         auth = Firebase.auth
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        root = inflater.inflate(R.layout.fragment_login, container, false) as ViewGroup
+    ): View {
+        _binding = FragmentLoginBinding.inflate(layoutInflater)
+        return binding.root
+    }
 
-        editTextEmail = root.findViewById(R.id.editTextEmail)
-        editTextPassword = root.findViewById(R.id.editTextPassword)
-        buttonLogin = root.findViewById(R.id.buttonLogin)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        buttonLogin.setOnClickListener { login() }
+        binding.buttonLogin.setOnClickListener { login() }
+    }
 
-        return root
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun login() {
-        if (editTextEmail.text.isNotEmpty() && editTextPassword.text.isNotEmpty()) {
-            auth.signInWithEmailAndPassword(
-                editTextEmail.text.toString(),
-                editTextPassword.text.toString()
-            ).addOnCompleteListener {
-                if (it.isSuccessful) {
-                    goToInventory()
-                } else {
-                    Toast.makeText(activity, "Error: Intente nuevamente", Toast.LENGTH_SHORT).show()
-                }
+        val email = binding.editTextEmail.text.toString()
+        val password = binding.editTextPassword.text.toString()
+
+        try {
+            if (email.isNotEmpty() && password.isNotEmpty()) {
+                auth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            goToInventory()
+                        } else {
+                            Toast.makeText(activity, "Credenciales inválidas", Toast.LENGTH_SHORT).show()
+                        }
+                    }
             }
+        } catch(e: Exception) {
+            Toast.makeText(activity, "Surgió un problema, intente de nuevo", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun goToInventory() {
         val action = LoginFragmentDirections.actionLoginFragmentToInventoryFragment()
-        root.findNavController().navigate(action)
+        requireView().findNavController().navigate(action)
     }
 }

@@ -1,9 +1,5 @@
 <resources>
     <string name="app_name">Imprenta Express</string>
-    <string name="activity1">Activity1</string>
-    <string name="go_to_activity_2">Go to Activity 2</string>
-    <string name="activity2">Activity 2</string>
-    <string name="go_to_activity_1">Go to Activity 1</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -61,4 +57,6 @@
     <string name="editar_costumible">Editar consumible</string>
     <string name="editar">Editar</string>
     <string name="imprenta_express">Imprenta Express</string>
+    <string name="ver_producto">Ver producto</string>
+    <string name="imagen_del_producto">Imagen del producto</string>
 </resources>

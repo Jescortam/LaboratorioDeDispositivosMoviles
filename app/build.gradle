@@ -58,6 +58,7 @@ dependencies {
     implementation 'androidx.annotation:annotation:1.6.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
     //noinspection GradleDependency
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     //noinspection GradleDependency

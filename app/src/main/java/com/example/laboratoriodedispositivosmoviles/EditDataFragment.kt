@@ -1,13 +1,13 @@
 package com.example.laboratoriodedispositivosmoviles
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
@@ -15,7 +15,6 @@ import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import layout.com.example.laboratoriodedispositivosmoviles.Product
-import kotlin.collections.HashMap
 
 private const val PRODUCT = "product"
 
@@ -52,12 +51,19 @@ class EditDataFragment : Fragment() {
         return root
     }
 
-    fun getProductData() {
+    private fun getProductData() {
         database.child("products").child(productId).get().addOnSuccessListener {
             data = it.value as HashMap<*, *>
+
+            if (data.isEmpty()) {
+                Toast.makeText(activity, "No se encontró el producto escaneado", Toast.LENGTH_SHORT).show()
+                exit()
+            }
+
             initFormWithData(data)
         }.addOnFailureListener {
-            Toast.makeText(activity, "Error al buscar el producto", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, "No se encontró el producto escaneado", Toast.LENGTH_SHORT).show()
+            exit()
         }
     }
 
