@@ -92,7 +92,7 @@ class AddImageFragment : Fragment() {
         val productDatabase = ProductDatabase(requireActivity())
         val product: Product = ProductParser.parseProductFromJson(parsedProduct)
 
-        val imageStorage = ImageStorageHandler(requireView())
+        val imageStorage = ImageStorageHandler(requireActivity())
         val pathString = imageStorage.uploadImage(binding.imageViewCargarImagen, product.id)
 
         product.image = pathString

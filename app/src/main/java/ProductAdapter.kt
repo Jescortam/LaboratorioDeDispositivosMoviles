@@ -21,12 +21,11 @@ import layout.com.example.laboratoriodedispositivosmoviles.Product
 import layout.com.example.laboratoriodedispositivosmoviles.ProductCardClickListener
 import kotlin.coroutines.CoroutineContext
 
-class ProductAdapter(var products: ArrayList<Product>, val productCardClickListener: ProductCardClickListener): RecyclerView.Adapter<ProductAdapter.ViewHolder>(), CoroutineScope {
+class ProductAdapter(var products: ArrayList<Product>, private val productCardClickListener: ProductCardClickListener): RecyclerView.Adapter<ProductAdapter.ViewHolder>(), CoroutineScope {
     private var job: Job = Job()
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
-
 
     private lateinit var glideRef: RequestManager
 
@@ -34,7 +33,6 @@ class ProductAdapter(var products: ArrayList<Product>, val productCardClickListe
         var productView: CardView
         var productImage: ImageView
         var productName: TextView
-        var productId: TextView
         var productQuantity: TextView
         var productType: TextView
         var productPrice: TextView
@@ -44,7 +42,6 @@ class ProductAdapter(var products: ArrayList<Product>, val productCardClickListe
             productView = view.findViewById(R.id.productView)
             productImage = view.findViewById(R.id.productImageView)
             productName = view.findViewById(R.id.productNameTextView)
-            productId = view.findViewById(R.id.productIdTextView)
             productQuantity = view.findViewById(R.id.productQuantityTextView)
             productType = view.findViewById(R.id.productTypeTextView)
             productPrice = view.findViewById(R.id.productPriceTextView)
@@ -70,7 +67,6 @@ class ProductAdapter(var products: ArrayList<Product>, val productCardClickListe
         }
 
         viewHolder.productName.text = products[position].name
-        viewHolder.productId.text = "Código: ${products[position].id}"
         viewHolder.productQuantity.text = "Cantidad: ${products[position].quantity}"
         viewHolder.productType.text = "Tipo: ${products[position].type}"
         viewHolder.productPrice.text = "$${products[position].price}"

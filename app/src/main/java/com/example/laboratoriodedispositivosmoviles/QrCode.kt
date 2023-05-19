@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentActivity
 import com.google.zxing.BarcodeFormat
@@ -39,6 +40,8 @@ class QrCode {
             val content = createContent(file)
             val uri = save(activity, content, productId)
             clearContents(activity, content, uri)
+
+            Toast.makeText(activity, "La descarga del código fue exitosa", Toast.LENGTH_SHORT).show()
         }
 
         private fun createFile(activity: FragmentActivity, productId: String): File {

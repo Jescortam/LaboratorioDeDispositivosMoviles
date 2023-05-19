@@ -27,9 +27,9 @@ class EditDataFragment : Fragment(), CoroutineScope {
     private var _binding: FragmentEditDataBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var productId: String
-    private lateinit var data: HashMap<*, *>
     private lateinit var productDatabase: ProductDatabase
+    private lateinit var productId: String
+    private var product: Product? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +49,8 @@ class EditDataFragment : Fragment(), CoroutineScope {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        productDatabase = ProductDatabase(requireActivity())
+
         launch { getProductData() }
     }
 
@@ -59,12 +61,12 @@ class EditDataFragment : Fragment(), CoroutineScope {
     }
 
     private suspend fun getProductData() {
-        val product = productDatabase.getProduct(productId)
+        product = productDatabase.getProduct(productId)
         if (product == null) {
             Toast.makeText(activity, "No se encontró el producto escaneado", Toast.LENGTH_SHORT).show()
             exit()
         } else {
-            initFormWithData(product)
+            initFormWithData(product!!)
         }
     }
 
@@ -89,7 +91,7 @@ class EditDataFragment : Fragment(), CoroutineScope {
         if (nombre.isNotEmpty() && cantidad != null && tipo.isNotEmpty() &&
             precio != null && observaciones.isNotEmpty()) {
             val product = Product(productId,
-                data["image"].toString(),
+                product!!.image,
                 nombre,
                 cantidad,
                 tipo,

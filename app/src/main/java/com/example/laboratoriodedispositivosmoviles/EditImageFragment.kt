@@ -65,8 +65,10 @@ class EditImageFragment : Fragment(), CoroutineScope {
         binding.buttonCamara.setOnClickListener { chooseImageFromCamera() }
         binding.buttonGaleria.setOnClickListener { chooseImageFromGallery() }
 
-        imageStorageHandler = ImageStorageHandler(requireView())
-        imageStorageHandler.getImageFromStorageToImageView(product.id, binding.imageViewCargarImagen)
+        imageStorageHandler = ImageStorageHandler(requireActivity())
+        val pathString = ImageStorageHandler.getPathString(product.id)
+        val imageView = binding.imageViewCargarImagen
+        imageStorageHandler.getImageFromStorageToImageView(pathString, imageView)
     }
 
     override fun onDestroy() {
@@ -113,11 +115,11 @@ class EditImageFragment : Fragment(), CoroutineScope {
         product.image = pathString
         productDatabase.setProduct(product.id, product)
 
-        goToPrintQr(product.id)
+        goToInventory()
     }
 
-    private fun goToPrintQr(productId: String) {
-        val action = AddImageFragmentDirections.actionAddImageFragmentToPrintQrFragment(productId)
+    private fun goToInventory() {
+        val action = EditImageFragmentDirections.actionEditImageFragmentToInventoryFragment()
         requireView().findNavController().navigate(action)
     }
 

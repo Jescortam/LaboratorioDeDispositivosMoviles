@@ -2,8 +2,8 @@ package layout.com.example.laboratoriodedispositivosmoviles
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.view.View
 import android.widget.ImageView
+import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.Glide
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -11,10 +11,14 @@ import java.io.ByteArrayOutputStream
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class ImageStorageHandler(var activity: View) {
+class ImageStorageHandler(var activity: FragmentActivity) {
     private val storage = Firebase.storage.reference
 
     companion object {
+        fun getPathString(productId: String): String {
+            return "images/IMG_${productId}.jpg"
+        }
+
         fun getImageDataFromImageView(imageView: ImageView): ByteArray {
             val bitmap = Bitmap.createBitmap(
                 imageView.width, imageView.height, Bitmap.Config.ARGB_8888
@@ -28,7 +32,7 @@ class ImageStorageHandler(var activity: View) {
     }
 
     fun uploadImage(imageView: ImageView, productId: String): String {
-        val pathString = "images/IMG_${productId}.jpg"
+        val pathString = getPathString(productId)
         val imageRef = storage.child(pathString)
 
         val data = getImageDataFromImageView(imageView)

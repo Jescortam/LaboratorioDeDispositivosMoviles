@@ -53,7 +53,7 @@ class GetQrFragment : Fragment() {
     }
 
     private fun exit() {
-        val action = PrintQrFragmentDirections.actionPrintQrFragmentToInventoryFragment()
+        val action = GetQrFragmentDirections.actionPrintQrFragmentToInventoryFragment()
         requireView().findNavController().navigate(action)
     }
 
