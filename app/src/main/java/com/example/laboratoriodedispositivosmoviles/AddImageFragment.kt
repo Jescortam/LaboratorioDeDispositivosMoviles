@@ -1,46 +1,30 @@
 package com.example.laboratoriodedispositivosmoviles
 
-import android.content.ContentValues.TAG
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
-import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.ktx.storage
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import layout.com.example.laboratoriodedispositivosmoviles.Product
-import java.io.ByteArrayOutputStream
+import com.example.laboratoriodedispositivosmoviles.databinding.FragmentAddImageBinding
+import layout.com.example.laboratoriodedispositivosmoviles.*
 
 class AddImageFragment : Fragment() {
     companion object {
         const val PARSED_PRODUCT = "parsedProduct"
     }
 
-    private lateinit var database: DatabaseReference
+    private var _binding: FragmentAddImageBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var parsedProduct: String
-    private lateinit var storage: FirebaseStorage
-    private lateinit var root: ViewGroup
-    private lateinit var imageUri: Uri
-    private lateinit var buttonCamara: Button
-    private lateinit var buttonGaleria: Button
-    private lateinit var buttonAtras: Button
-    private lateinit var buttonAgregar: Button
-    private lateinit var imageViewCargarImagen : ImageView
+    private lateinit var requestLabel: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,93 +32,77 @@ class AddImageFragment : Fragment() {
         arguments?.let {
             parsedProduct = it.getString(PARSED_PRODUCT).toString()
         }
-
-        database = Firebase.database.reference
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        root = inflater.inflate(R.layout.fragment_add_image, container, false) as ViewGroup
+        _binding = FragmentAddImageBinding.inflate(layoutInflater)
+        return binding.root
+    }
 
-        buttonAtras = root.findViewById(R.id.buttonAtras)
-        buttonAtras.setOnClickListener { goBack() }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        buttonAgregar = root.findViewById(R.id.buttonAgregar)
-        buttonAgregar.setOnClickListener { addProduct(parsedProduct) }
+        binding.buttonAtras.setOnClickListener { goBack() }
+        binding.buttonAgregar.setOnClickListener { addProduct(parsedProduct) }
+        binding.buttonCamara.setOnClickListener { chooseImageFromCamera() }
+        binding.buttonGaleria.setOnClickListener { chooseImageFromGallery() }
+    }
 
-        imageViewCargarImagen = root.findViewById(R.id.imageViewCargarImagen)
-
-        buttonCamara = root.findViewById(R.id.buttonCamara)
-        buttonCamara.setOnClickListener { chooseImageFromCamera() }
-
-        buttonGaleria = root.findViewById(R.id.buttonGaleria)
-        buttonGaleria.setOnClickListener { chooseImageFromGallery() }
-
-        return root
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     private fun chooseImageFromCamera() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        startActivityForResult(intent, 1)
+        requestLabel = "CAMERA"
+        resultLauncher.launch(intent)
     }
 
     private fun chooseImageFromGallery() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/*"
-        startActivityForResult(intent, 2)
+        requestLabel = "GALLERY"
+        resultLauncher.launch(intent)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == 1){
-            val imageBitmap = data?.extras?.get("data") as Bitmap
-            imageViewCargarImagen.setImageBitmap(imageBitmap)
-
-        } else if (requestCode == 2) {
-            imageUri = data?.data!!
-            imageViewCargarImagen.setImageURI(imageUri)
+    private var resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK && result.data != null) {
+                if (requestLabel == "CAMERA") {
+                    val imageBitmap = result.data!!.extras?.get("data") as Bitmap
+                    binding.imageViewCargarImagen.setImageBitmap(imageBitmap)
+                } else if (requestLabel == "GALLERY") {
+                    binding.imageViewCargarImagen.setImageURI(result.data!!.data!!)
+                }
+            } else {
+                Toast.makeText(activity, "Operación cancelada", Toast.LENGTH_SHORT).show()
+            }
         }
-    }
 
     private fun goBack() {
         val action = AddImageFragmentDirections.actionAddImageFragmentToAddDataFragment()
-        root.findNavController().navigate(action)
+        requireView().findNavController().navigate(action)
     }
 
     private fun addProduct(parsedProduct: String) {
-        val product: Product = Gson().fromJson(parsedProduct, object: TypeToken<Product>(){}.type)
+        val productDatabase = ProductDatabase(requireActivity())
+        val product: Product = ProductParser.parseProductFromJson(parsedProduct)
 
-        storage = Firebase.storage
-        val storageRef = storage.reference
-        val pathString = "images/IMG_${product.id}.jpg"
-        val imageRef = storageRef.child(pathString)
-
-        imageViewCargarImagen.isDrawingCacheEnabled = true
-        imageViewCargarImagen.buildDrawingCache()
-        val bitmap = (imageViewCargarImagen.drawable as BitmapDrawable).bitmap
-        val baos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-        val data = baos.toByteArray()
-
-        val uploadTask = imageRef.putBytes(data)
-        uploadTask.addOnFailureListener {
-            Log.d(TAG, "Failure on image uplaod")
-        }.addOnSuccessListener {
-            Log.d(TAG, "successful image upload")
-        }
+        val imageStorage = ImageStorageHandler(requireView())
+        val pathString = imageStorage.uploadImage(binding.imageViewCargarImagen, product.id)
 
         product.image = pathString
+        productDatabase.setProduct(product.id, product)
 
-        database.child("products").child(product.id).setValue(product).addOnCompleteListener {
-            Toast.makeText(activity, "Producto agregado de manera exitosa", Toast.LENGTH_SHORT).show()
-        }.addOnFailureListener {
-            Toast.makeText(activity, "Error en la publicación del producto", Toast.LENGTH_SHORT).show()
-        }
+        goToPrintQr(product.id)
+    }
 
-        val action = AddImageFragmentDirections.actionAddImageFragmentToPrintQrFragment(product.id)
-        root.findNavController().navigate(action)
+    private fun goToPrintQr(productId: String) {
+        val action = AddImageFragmentDirections.actionAddImageFragmentToPrintQrFragment(productId)
+        requireView().findNavController().navigate(action)
     }
 }

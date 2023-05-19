@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentActivity
 class InventoryMovementHandler(private val activity: FragmentActivity) {
     private val productDatabase = ProductDatabase(activity)
 
-    suspend fun substract(productId: String, units: Int) {
+    suspend fun subtract(productId: String, units: Int) {
         val product = productDatabase.getProduct(productId)
 
         if (product == null) {
@@ -20,6 +20,6 @@ class InventoryMovementHandler(private val activity: FragmentActivity) {
             product.quantity -= units
         }
 
-        productDatabase.saveChanges(productId, product)
+        productDatabase.setProduct(productId, product)
     }
 }

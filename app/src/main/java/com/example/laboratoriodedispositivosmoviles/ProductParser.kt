@@ -1,8 +1,11 @@
 package layout.com.example.laboratoriodedispositivosmoviles
 
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+
 class ProductParser {
     companion object {
-        fun parseProductHashMap(id: String, data: HashMap<*, *>): Product {
+        fun parseProductFromHashMap(id: String, data: HashMap<*, *>): Product {
             val price: Double = if (data["price"] is Long) {
                 (data["price"] as Long).toDouble()
             } else {
@@ -18,6 +21,14 @@ class ProductParser {
                 price,
                 data["details"] as String,
             )
+        }
+
+        fun parseProductFromJson(parsedProduct: String): Product {
+            return Gson().fromJson(parsedProduct, object: TypeToken<Product>(){}.type)
+        }
+
+        fun parseProductToJson(product: Product): String {
+            return Gson().toJson(product, object: TypeToken<Product>(){}.type)
         }
     }
 }

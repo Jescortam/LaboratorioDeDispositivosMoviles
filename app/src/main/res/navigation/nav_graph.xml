@@ -58,7 +58,7 @@
     </fragment>
     <fragment
         android:id="@+id/printQrFragment"
-        android:name="com.example.laboratoriodedispositivosmoviles.PrintQrFragment"
+        android:name="com.example.laboratoriodedispositivosmoviles.GetQrFragment"
         android:label="fragment_print_qr"
         tools:layout="@layout/fragment_get_qr" >
         <action

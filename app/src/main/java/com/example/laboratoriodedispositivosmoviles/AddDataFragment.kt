@@ -4,80 +4,68 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.example.laboratoriodedispositivosmoviles.databinding.FragmentAddDataBinding
 import layout.com.example.laboratoriodedispositivosmoviles.Product
+import layout.com.example.laboratoriodedispositivosmoviles.ProductParser
 import java.util.*
 
 class AddDataFragment : Fragment() {
-
-    private lateinit var root: ViewGroup
-
-    private lateinit var editTextNombre: EditText
-    private lateinit var editTextCantidad: EditText
-    private lateinit var editTextTipo: EditText
-    private lateinit var editTextPrecio: EditText
-    private lateinit var editTextObservaciones: EditText
-    private lateinit var buttonSiguiente: Button
-    private lateinit var buttonSalir: Button
+    private var _binding: FragmentAddDataBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        root = inflater.inflate(R.layout.fragment_add_data, container, false) as ViewGroup
+        _binding = FragmentAddDataBinding.inflate(layoutInflater)
+        return binding.root
+    }
 
-        editTextNombre = root.findViewById(R.id.editTextNombre)
-        editTextCantidad = root.findViewById(R.id.editTextCantidad)
-        editTextTipo = root.findViewById(R.id.editTextTipo)
-        editTextPrecio = root.findViewById(R.id.editTextPrecio)
-        editTextObservaciones = root.findViewById(R.id.editTextObservaciones)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.buttonSiguiente.setOnClickListener { addData() }
+        binding.buttonSalir.setOnClickListener { exit() }
+    }
 
-        buttonSiguiente = root.findViewById(R.id.buttonSiguiente)
-        buttonSiguiente.setOnClickListener { addData() }
-
-        buttonSalir = root.findViewById(R.id.buttonSalir)
-        buttonSalir.setOnClickListener { exit() }
-
-        return root
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     private fun addData() {
         val id = UUID.randomUUID().toString()
 
-        val nombre = editTextNombre.text
-        val cantidad = editTextCantidad.text.toString().toIntOrNull()
-        val tipo = editTextTipo.text
-        val precio = editTextPrecio.text.toString().toDoubleOrNull()
-        val observaciones = editTextObservaciones.text
+        val nombre = binding.editTextNombre.text.toString()
+        val cantidad = binding.editTextCantidad.text.toString().toIntOrNull()
+        val tipo = binding.editTextTipo.text.toString()
+        val precio = binding.editTextPrecio.text.toString().toDoubleOrNull()
+        val observaciones = binding.editTextObservaciones.text.toString()
 
         if (nombre.isNotEmpty() && cantidad != null && tipo.isNotEmpty() &&
             precio != null && observaciones.isNotEmpty()) {
             val product = Product(id,
                 "",
-                nombre.toString(),
+                nombre,
                 cantidad,
-                tipo.toString(),
+                tipo,
                 precio,
-                observaciones.toString())
+                observaciones)
 
             goNext(product)
         }
     }
 
     private fun goNext(product: Product) {
-        val parsedProduct = Gson().toJson(product, object: TypeToken<Product>(){}.type)
+        val parsedProduct = ProductParser.parseProductToJson(product)
         val action = AddDataFragmentDirections.actionAddDataFragmentToAddImageFragment(parsedProduct)
-        root.findNavController().navigate(action)
+        requireView().findNavController().navigate(action)
     }
 
     private fun exit() {
         val action = AddDataFragmentDirections.actionAddDataFragmentToInventoryFragment()
-        root.findNavController().navigate(action)
+        requireView().findNavController().navigate(action)
     }
 
 }

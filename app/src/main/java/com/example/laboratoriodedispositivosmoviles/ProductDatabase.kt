@@ -19,7 +19,7 @@ class ProductDatabase(val activity: FragmentActivity) {
         val childEventListener = object : ChildEventListener {
             override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
                 val data = dataSnapshot.value as HashMap<*, *>
-                val product = ProductParser.parseProductHashMap(dataSnapshot.key!!, data)
+                val product = ProductParser.parseProductFromHashMap(dataSnapshot.key!!, data)
 
                 adapter.products += product
                 adapter.notifyItemInserted(adapter.products.size - 1)
@@ -30,7 +30,7 @@ class ProductDatabase(val activity: FragmentActivity) {
                 while (i < adapter.products.size) {
                     if (adapter.products[i].id == dataSnapshot.key) {
                         val data = dataSnapshot.value as HashMap<*, *>
-                        adapter.products[i] = ProductParser.parseProductHashMap(dataSnapshot.key!!, data)
+                        adapter.products[i] = ProductParser.parseProductFromHashMap(dataSnapshot.key!!, data)
                         adapter.notifyItemChanged(i)
                         break
                     }
@@ -70,14 +70,13 @@ class ProductDatabase(val activity: FragmentActivity) {
                 continuation.resume(null)
             }
 
-            continuation.resume(ProductParser.parseProductHashMap(productId, data))
+            continuation.resume(ProductParser.parseProductFromHashMap(productId, data))
         }.addOnFailureListener {
             continuation.resume(null)
         }
     }
 
-    fun saveChanges(productId: String, product: Product) {
-
+    fun setProduct(productId: String, product: Product) {
         database.child(productId).setValue(product).addOnCompleteListener {
             Toast.makeText(activity, "Producto editado de manera exitosa", Toast.LENGTH_SHORT).show()
         }.addOnFailureListener {

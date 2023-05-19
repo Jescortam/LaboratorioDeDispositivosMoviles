@@ -80,6 +80,7 @@ class InventoryFragment : Fragment(), ProductCardClickListener, CoroutineScope {
 
     override fun onDestroy() {
         super.onDestroy()
+        _binding = null
         job.cancel()
     }
 
@@ -125,7 +126,7 @@ class InventoryFragment : Fragment(), ProductCardClickListener, CoroutineScope {
     }
 
     private suspend fun sellProductUnit(productId: String) {
-        inventoryMovementHandler.substract(productId, 1)
+        inventoryMovementHandler.subtract(productId, 1)
     }
 
     override suspend fun onProductCardClick(productId: String) {
