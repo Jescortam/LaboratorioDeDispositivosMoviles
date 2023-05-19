@@ -1,15 +1,18 @@
 package com.example.laboratoriodedispositivosmoviles
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.example.laboratoriodedispositivosmoviles.databinding.FragmentEditImageBinding
@@ -21,6 +24,9 @@ import layout.com.example.laboratoriodedispositivosmoviles.ImageStorageHandler
 import layout.com.example.laboratoriodedispositivosmoviles.Product
 import layout.com.example.laboratoriodedispositivosmoviles.ProductDatabase
 import layout.com.example.laboratoriodedispositivosmoviles.ProductParser
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.coroutines.CoroutineContext
 
 class EditImageFragment : Fragment(), CoroutineScope {
@@ -39,6 +45,8 @@ class EditImageFragment : Fragment(), CoroutineScope {
     private lateinit var product: Product
     private lateinit var imageStorageHandler: ImageStorageHandler
     private lateinit var requestLabel: String
+    private lateinit var imageUri: Uri
+    private lateinit var currentPhotoPath: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,8 +85,29 @@ class EditImageFragment : Fragment(), CoroutineScope {
         job.cancel()
     }
 
+    @SuppressLint("SimpleDateFormat")
+    private fun createImageFile(): File {
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val storageDir: File? = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile(
+            "JPEG_${timeStamp}_",
+            ".jpg",
+            storageDir
+        ).apply {
+            currentPhotoPath = absolutePath
+        }
+    }
+
+
     private fun chooseImageFromCamera() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        val imageFile = createImageFile()
+        imageUri = FileProvider.getUriForFile(
+            Objects.requireNonNull(requireContext()),
+            BuildConfig.APPLICATION_ID + ".provider",
+            imageFile
+        )
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
         requestLabel = "CAMERA"
         resultLauncher.launch(intent)
     }
@@ -93,12 +122,11 @@ class EditImageFragment : Fragment(), CoroutineScope {
     private var resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK && result.data != null) {
-                if (requestLabel == "CAMERA") {
-                    val imageBitmap = result.data!!.extras?.get("data") as Bitmap
-                    binding.imageViewCargarImagen.setImageBitmap(imageBitmap)
-                } else if (requestLabel == "GALLERY") {
-                    binding.imageViewCargarImagen.setImageURI(result.data!!.data!!)
+                if (requestLabel == "GALLERY") {
+                    imageUri = result.data!!.data!!
                 }
+
+                binding.imageViewCargarImagen.setImageURI(imageUri)
             } else {
                 Toast.makeText(activity, "Operación cancelada", Toast.LENGTH_SHORT).show()
             }
@@ -110,7 +138,7 @@ class EditImageFragment : Fragment(), CoroutineScope {
         val product: Product = ProductParser.parseProductFromJson(parsedProduct)
 
         imageStorageHandler.deleteImage(product.image)
-        val pathString = imageStorageHandler.uploadImage(binding.imageViewCargarImagen, product.id)
+        val pathString = imageStorageHandler.uploadImage(imageUri, product.id)
 
         product.image = pathString
         productDatabase.setProduct(product.id, product)

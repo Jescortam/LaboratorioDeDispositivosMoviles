@@ -1,13 +1,11 @@
 package layout.com.example.laboratoriodedispositivosmoviles
 
-import android.graphics.Bitmap
-import android.graphics.Canvas
+import android.net.Uri
 import android.widget.ImageView
 import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.Glide
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import java.io.ByteArrayOutputStream
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -18,28 +16,15 @@ class ImageStorageHandler(var activity: FragmentActivity) {
         fun getPathString(productId: String): String {
             return "images/IMG_${productId}.jpg"
         }
-
-        fun getImageDataFromImageView(imageView: ImageView): ByteArray {
-            val bitmap = Bitmap.createBitmap(
-                imageView.width, imageView.height, Bitmap.Config.ARGB_8888
-            )
-            val canvas = Canvas(bitmap)
-            imageView.draw(canvas)
-            val baos = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-            return baos.toByteArray()
-        }
     }
 
-    fun uploadImage(imageView: ImageView, productId: String): String {
+    suspend fun uploadImage(imageUri: Uri, productId: String): String = suspendCoroutine {continuation ->
         val pathString = getPathString(productId)
         val imageRef = storage.child(pathString)
 
-        val data = getImageDataFromImageView(imageView)
-
-        imageRef.putBytes(data)
-
-        return pathString
+        imageRef.putFile(imageUri).addOnCompleteListener {
+            continuation.resume(pathString)
+        }
     }
 
     suspend fun deleteImage(pathString: String) = suspendCoroutine { continuation ->

@@ -1,21 +1,36 @@
 package com.example.laboratoriodedispositivosmoviles
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.example.laboratoriodedispositivosmoviles.databinding.FragmentAddImageBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import layout.com.example.laboratoriodedispositivosmoviles.*
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.coroutines.CoroutineContext
 
-class AddImageFragment : Fragment() {
+class AddImageFragment : Fragment(), CoroutineScope {
+    private var job: Job = Job()
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
+
     companion object {
         const val PARSED_PRODUCT = "parsedProduct"
     }
@@ -25,6 +40,8 @@ class AddImageFragment : Fragment() {
 
     private lateinit var parsedProduct: String
     private lateinit var requestLabel: String
+    private lateinit var imageUri: Uri
+    private lateinit var currentPhotoPath: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +63,7 @@ class AddImageFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonAtras.setOnClickListener { goBack() }
-        binding.buttonAgregar.setOnClickListener { addProduct(parsedProduct) }
+        binding.buttonAgregar.setOnClickListener { launch { addProduct(parsedProduct) } }
         binding.buttonCamara.setOnClickListener { chooseImageFromCamera() }
         binding.buttonGaleria.setOnClickListener { chooseImageFromGallery() }
     }
@@ -54,10 +71,32 @@ class AddImageFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+        job.cancel()
     }
+
+    @SuppressLint("SimpleDateFormat")
+    private fun createImageFile(): File {
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val storageDir: File? = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile(
+            "JPEG_${timeStamp}_",
+            ".jpg",
+            storageDir
+        ).apply {
+            currentPhotoPath = absolutePath
+        }
+    }
+
 
     private fun chooseImageFromCamera() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        val imageFile = createImageFile()
+        imageUri = FileProvider.getUriForFile(
+            Objects.requireNonNull(requireContext()),
+            BuildConfig.APPLICATION_ID + ".provider",
+            imageFile
+        )
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
         requestLabel = "CAMERA"
         resultLauncher.launch(intent)
     }
@@ -72,12 +111,11 @@ class AddImageFragment : Fragment() {
     private var resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK && result.data != null) {
-                if (requestLabel == "CAMERA") {
-                    val imageBitmap = result.data!!.extras?.get("data") as Bitmap
-                    binding.imageViewCargarImagen.setImageBitmap(imageBitmap)
-                } else if (requestLabel == "GALLERY") {
-                    binding.imageViewCargarImagen.setImageURI(result.data!!.data!!)
+                if (requestLabel == "GALLERY") {
+                    imageUri = result.data!!.data!!
                 }
+
+                binding.imageViewCargarImagen.setImageURI(imageUri)
             } else {
                 Toast.makeText(activity, "Operación cancelada", Toast.LENGTH_SHORT).show()
             }
@@ -88,12 +126,12 @@ class AddImageFragment : Fragment() {
         requireView().findNavController().navigate(action)
     }
 
-    private fun addProduct(parsedProduct: String) {
+    private suspend fun addProduct(parsedProduct: String) {
         val productDatabase = ProductDatabase(requireActivity())
         val product: Product = ProductParser.parseProductFromJson(parsedProduct)
 
         val imageStorage = ImageStorageHandler(requireActivity())
-        val pathString = imageStorage.uploadImage(binding.imageViewCargarImagen, product.id)
+        val pathString = imageStorage.uploadImage(imageUri, product.id)
 
         product.image = pathString
         productDatabase.setProduct(product.id, product)
