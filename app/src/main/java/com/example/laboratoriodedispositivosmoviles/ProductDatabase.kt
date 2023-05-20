@@ -1,5 +1,7 @@
 package layout.com.example.laboratoriodedispositivosmoviles
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import com.google.firebase.database.ChildEventListener
@@ -13,7 +15,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 class ProductDatabase(val activity: FragmentActivity) {
-    private var database: DatabaseReference = Firebase.database.getReference("/products")
+    private var productDatabase: DatabaseReference = Firebase.database.getReference("products")
 
     fun setChildEventListener(adapter: ProductAdapter) {
         val childEventListener = object : ChildEventListener {
@@ -57,27 +59,30 @@ class ProductDatabase(val activity: FragmentActivity) {
             override fun onCancelled(databaseError: DatabaseError) {}
         }
 
-        database.addChildEventListener(childEventListener)
+        productDatabase.addChildEventListener(childEventListener)
     }
 
     suspend fun getProduct(productId: String): Product? = suspendCoroutine { continuation ->
         var data: HashMap<*, *>
-        val productRef = database.child(productId)
+        val productRef = productDatabase.child(productId)
+        Log.d(TAG, productId)
         productRef.get().addOnSuccessListener {
-            data = it.value as HashMap<*, *>
-            if (data.isEmpty()) {
-                Toast.makeText(activity, "No se encontró el producto escaneado", Toast.LENGTH_SHORT).show()
+            if (it.value != null) {
+                data = it.value as HashMap<*, *>
+                if (data.isNotEmpty()) {
+                    continuation.resume(ProductParser.parseProductFromHashMap(productId, data))
+                }
+            } else {
+                Toast.makeText(activity, "No se encontró el producto.", Toast.LENGTH_SHORT).show()
                 continuation.resume(null)
             }
-
-            continuation.resume(ProductParser.parseProductFromHashMap(productId, data))
         }.addOnFailureListener {
             continuation.resume(null)
         }
     }
 
     fun setProduct(productId: String, product: Product) {
-        database.child(productId).setValue(product).addOnCompleteListener {
+        productDatabase.child(productId).setValue(product).addOnCompleteListener {
             Toast.makeText(activity, "Producto editado de manera exitosa", Toast.LENGTH_SHORT).show()
         }.addOnFailureListener {
             Toast.makeText(activity, "Error en la edición del producto", Toast.LENGTH_SHORT).show()

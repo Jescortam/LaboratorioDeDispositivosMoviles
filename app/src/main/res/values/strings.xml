@@ -59,4 +59,13 @@
     <string name="imprenta_express">Imprenta Express</string>
     <string name="ver_producto">Ver producto</string>
     <string name="imagen_del_producto">Imagen del producto</string>
+    <string name="nombre_producto">Nombre del producto</string>
+    <string name="ver_qr">Ver QR</string>
+    <string name="descargar_qr">Descargar QR</string>
+    <string name="editar_detalles">Editar detalles</string>
+    <string name="editar_imagen">Editar imagen</string>
+    <string name="restar">Restar</string>
+    <string name="zero">0</string>
+    <string name="detalles">Detalles:</string>
+    <string name="movimientos">Movimientos</string>
 </resources>

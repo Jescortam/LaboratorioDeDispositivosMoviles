@@ -44,7 +44,7 @@ class GetQrFragment : Fragment() {
 
         binding.imageViewCodigoQr.setImageBitmap(QrCode.encodeAsBitmap(productId))
         binding.buttonDescargar.setOnClickListener { saveToGallery(requireActivity(), productId) }
-        binding.buttonSalir.setOnClickListener { exit() }
+        binding.buttonSalir.setOnClickListener { goToProduct() }
     }
 
     override fun onDestroy() {
@@ -52,8 +52,8 @@ class GetQrFragment : Fragment() {
         _binding = null
     }
 
-    private fun exit() {
-        val action = GetQrFragmentDirections.actionPrintQrFragmentToInventoryFragment()
+    private fun goToProduct() {
+        val action = GetQrFragmentDirections.actionGetQrFragmentToViewProductFragment(productId)
         requireView().findNavController().navigate(action)
     }
 

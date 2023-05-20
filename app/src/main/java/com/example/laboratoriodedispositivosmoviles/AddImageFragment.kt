@@ -121,11 +121,6 @@ class AddImageFragment : Fragment(), CoroutineScope {
             }
         }
 
-    private fun goBack() {
-        val action = AddImageFragmentDirections.actionAddImageFragmentToAddDataFragment()
-        requireView().findNavController().navigate(action)
-    }
-
     private suspend fun addProduct(parsedProduct: String) {
         val productDatabase = ProductDatabase(requireActivity())
         val product: Product = ProductParser.parseProductFromJson(parsedProduct)
@@ -136,11 +131,16 @@ class AddImageFragment : Fragment(), CoroutineScope {
         product.image = pathString
         productDatabase.setProduct(product.id, product)
 
-        goToPrintQr(product.id)
+        goToProduct(product.id)
     }
 
-    private fun goToPrintQr(productId: String) {
-        val action = AddImageFragmentDirections.actionAddImageFragmentToPrintQrFragment(productId)
+    private fun goBack() {
+        val action = AddImageFragmentDirections.actionAddImageFragmentToAddDataFragment()
+        requireView().findNavController().navigate(action)
+    }
+
+    private fun goToProduct(productId: String) {
+        val action = AddImageFragmentDirections.actionAddImageFragmentToViewProductFragment(productId)
         requireView().findNavController().navigate(action)
     }
 }

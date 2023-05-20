@@ -21,9 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import layout.com.example.laboratoriodedispositivosmoviles.ImageStorageHandler
-import layout.com.example.laboratoriodedispositivosmoviles.Product
 import layout.com.example.laboratoriodedispositivosmoviles.ProductDatabase
-import layout.com.example.laboratoriodedispositivosmoviles.ProductParser
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -35,26 +33,23 @@ class EditImageFragment : Fragment(), CoroutineScope {
         get() = Dispatchers.Main + job
 
     companion object {
-        const val PARSED_PRODUCT = "parsedProduct"
+        const val PRODUCT_ID = "productId"
     }
 
     private var _binding: FragmentEditImageBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var parsedProduct: String
-    private lateinit var product: Product
+    private lateinit var productId: String
     private lateinit var imageStorageHandler: ImageStorageHandler
     private lateinit var requestLabel: String
-    private lateinit var imageUri: Uri
+    private var imageUri: Uri? = null
     private lateinit var currentPhotoPath: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            parsedProduct = it.getString(PARSED_PRODUCT).toString()
+            productId = it.getString(PRODUCT_ID).toString()
         }
-
-        product = ProductParser.parseProductFromJson(parsedProduct)
     }
 
     override fun onCreateView(
@@ -68,13 +63,13 @@ class EditImageFragment : Fragment(), CoroutineScope {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonAtras.setOnClickListener { goBack() }
+        binding.buttonAtras.setOnClickListener { goToProduct() }
         binding.buttonAgregar.setOnClickListener { launch { editProduct() } }
         binding.buttonCamara.setOnClickListener { chooseImageFromCamera() }
         binding.buttonGaleria.setOnClickListener { chooseImageFromGallery() }
 
         imageStorageHandler = ImageStorageHandler(requireActivity())
-        val pathString = ImageStorageHandler.getPathString(product.id)
+        val pathString = ImageStorageHandler.getPathString(productId)
         val imageView = binding.imageViewCargarImagen
         imageStorageHandler.getImageFromStorageToImageView(pathString, imageView)
     }
@@ -97,7 +92,6 @@ class EditImageFragment : Fragment(), CoroutineScope {
             currentPhotoPath = absolutePath
         }
     }
-
 
     private fun chooseImageFromCamera() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -134,25 +128,29 @@ class EditImageFragment : Fragment(), CoroutineScope {
 
 
     private suspend fun editProduct() {
+        if (imageUri == null) {
+            return goToProduct()
+        }
+
         val productDatabase = ProductDatabase(requireActivity())
-        val product: Product = ProductParser.parseProductFromJson(parsedProduct)
+        val product = productDatabase.getProduct(productId)
+
+        if (product == null) {
+            Toast.makeText(activity, "Error inesperado. Intente nuevamente", Toast.LENGTH_SHORT).show()
+            return goToProduct()
+        }
 
         imageStorageHandler.deleteImage(product.image)
-        val pathString = imageStorageHandler.uploadImage(imageUri, product.id)
+        val pathString = imageStorageHandler.uploadImage(imageUri!!, product.id)
 
         product.image = pathString
         productDatabase.setProduct(product.id, product)
 
-        goToInventory()
+        goToProduct()
     }
 
-    private fun goToInventory() {
-        val action = EditImageFragmentDirections.actionEditImageFragmentToInventoryFragment()
-        requireView().findNavController().navigate(action)
-    }
-
-    private fun goBack() {
-        val action = EditImageFragmentDirections.actionEditImageFragmentToEditDataFragment(product.id)
+    private fun goToProduct() {
+        val action = EditImageFragmentDirections.actionEditImageFragmentToViewProductFragment(productId)
         requireView().findNavController().navigate(action)
     }
 }

@@ -13,20 +13,10 @@ import com.bumptech.glide.RequestManager
 import com.example.laboratoriodedispositivosmoviles.R
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import layout.com.example.laboratoriodedispositivosmoviles.Product
 import layout.com.example.laboratoriodedispositivosmoviles.ProductCardClickListener
-import kotlin.coroutines.CoroutineContext
 
-class ProductAdapter(var products: ArrayList<Product>, private val productCardClickListener: ProductCardClickListener): RecyclerView.Adapter<ProductAdapter.ViewHolder>(), CoroutineScope {
-    private var job: Job = Job()
-
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
-
+class ProductAdapter(var products: ArrayList<Product>, private val productCardClickListener: ProductCardClickListener): RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
     private lateinit var glideRef: RequestManager
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -69,10 +59,10 @@ class ProductAdapter(var products: ArrayList<Product>, private val productCardCl
         viewHolder.productName.text = products[position].name
         viewHolder.productQuantity.text = "Cantidad: ${products[position].quantity}"
         viewHolder.productType.text = "Tipo: ${products[position].type}"
-        viewHolder.productPrice.text = "$${products[position].price}"
+        viewHolder.productPrice.text = "$${String.format("%.2f", products[position].price)}"
         viewHolder.productDetails.text = "Observaciones: ${products[position].details}"
 
-        viewHolder.productView.setOnClickListener { launch { productCardClickListener.onProductCardClick(products[position].id) }}
+        viewHolder.productView.setOnClickListener { productCardClickListener.onProductCardClick(products[position].id) }
     }
 
     override fun getItemCount() = products.size

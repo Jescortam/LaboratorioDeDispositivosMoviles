@@ -26,8 +26,8 @@
             android:id="@+id/action_inventoryFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
         <action
-            android:id="@+id/action_inventoryFragment_to_editDataFragment"
-            app:destination="@id/editDataFragment" />
+            android:id="@+id/action_inventoryFragment_to_viewProductFragment"
+            app:destination="@id/viewProductFragment" />
     </fragment>
     <fragment
         android:id="@+id/addDataFragment"
@@ -49,24 +49,24 @@
         <action
             android:id="@+id/action_addImageFragment_to_addDataFragment"
             app:destination="@id/addDataFragment" />
-        <action
-            android:id="@+id/action_addImageFragment_to_printQrFragment"
-            app:destination="@id/printQrFragment" />
         <argument
             android:name="parsedProduct"
             app:argType="string" />
+        <action
+            android:id="@+id/action_addImageFragment_to_viewProductFragment"
+            app:destination="@id/viewProductFragment" />
     </fragment>
     <fragment
-        android:id="@+id/printQrFragment"
+        android:id="@+id/getQrFragment"
         android:name="com.example.laboratoriodedispositivosmoviles.GetQrFragment"
-        android:label="fragment_print_qr"
-        tools:layout="@layout/fragment_get_qr" >
-        <action
-            android:id="@+id/action_printQrFragment_to_inventoryFragment"
-            app:destination="@id/inventoryFragment" />
+        android:label="fragment_get_qr"
+        tools:layout="@layout/fragment_get_qr">
         <argument
             android:name="product"
             app:argType="string" />
+        <action
+            android:id="@+id/action_getQrFragment_to_viewProductFragment"
+            app:destination="@id/viewProductFragment" />
     </fragment>
     <fragment
         android:id="@+id/editDataFragment"
@@ -74,28 +74,61 @@
         android:label="fragment_edit_data"
         tools:layout="@layout/fragment_edit_data" >
         <argument
-            android:name="product"
+            android:name="productId"
             app:argType="string" />
         <action
-            android:id="@+id/action_editDataFragment_to_inventoryFragment"
-            app:destination="@id/inventoryFragment" />
-        <action
-            android:id="@+id/action_editDataFragment_to_editImageFragment"
-            app:destination="@id/editImageFragment" />
+            android:id="@+id/action_editDataFragment_to_viewProductFragment"
+            app:destination="@id/viewProductFragment" />
     </fragment>
     <fragment
         android:id="@+id/editImageFragment"
         android:name="com.example.laboratoriodedispositivosmoviles.EditImageFragment"
         android:label="fragment_edit_image"
         tools:layout="@layout/fragment_edit_image" >
+        <argument
+            android:name="productId"
+            app:argType="string" />
         <action
-            android:id="@+id/action_editImageFragment_to_editDataFragment"
+            android:id="@+id/action_editImageFragment_to_viewProductFragment"
+            app:destination="@id/viewProductFragment" />
+        <action
+            android:id="@+id/action_editImageFragment_to_viewProductFragment2"
+            app:destination="@id/viewProductFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewProductFragment"
+        android:name="com.example.laboratoriodedispositivosmoviles.ViewProductFragment"
+        android:label="fragment_view_product"
+        tools:layout="@layout/fragment_view_product" >
+        <action
+            android:id="@+id/action_viewProductFragment_to_editDataFragment"
             app:destination="@id/editDataFragment" />
         <action
-            android:id="@+id/action_editImageFragment_to_inventoryFragment"
+            android:id="@+id/action_viewProductFragment_to_editImageFragment"
+            app:destination="@id/editImageFragment" />
+        <action
+            android:id="@+id/action_viewProductFragment_to_printQrFragment"
+            app:destination="@id/getQrFragment" />
+        <action
+            android:id="@+id/action_viewProductFragment_to_inventoryFragment"
             app:destination="@id/inventoryFragment" />
         <argument
-            android:name="parsedProduct"
+            android:name="productId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_viewProductFragment_to_productMovementFragment"
+            app:destination="@id/productMovementFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/productMovementFragment"
+        android:name="com.example.laboratoriodedispositivosmoviles.ProductMovementFragment"
+        android:label="fragment_product_movement"
+        tools:layout="@layout/fragment_product_movement" >
+        <action
+            android:id="@+id/action_productMovementFragment_to_viewProductFragment"
+            app:destination="@id/viewProductFragment" />
+        <argument
+            android:name="productId"
             app:argType="string" />
     </fragment>
 </navigation>

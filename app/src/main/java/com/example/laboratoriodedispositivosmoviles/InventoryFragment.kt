@@ -115,7 +115,7 @@ class InventoryFragment : Fragment(), ProductCardClickListener, CoroutineScope {
         if (result.resultCode == Activity.RESULT_OK && result.data != null) {
             val data = result.data.toString()
             if (requestLabel == "VIEW") {
-                goToEditData(data)
+                goToProduct(data)
             } else if (requestLabel == "SELL") {
                 sellProductUnit(data)
             }
@@ -129,8 +129,8 @@ class InventoryFragment : Fragment(), ProductCardClickListener, CoroutineScope {
         inventoryMovementHandler.subtract(productId, 1)
     }
 
-    override suspend fun onProductCardClick(productId: String) {
-        goToEditData(productId)
+    override fun onProductCardClick(productId: String) {
+        goToProduct(productId)
     }
 
     private fun logout() {
@@ -148,8 +148,8 @@ class InventoryFragment : Fragment(), ProductCardClickListener, CoroutineScope {
         requireView().findNavController().navigate(action)
     }
 
-    private fun goToEditData(productId: String) {
-        val action = InventoryFragmentDirections.actionInventoryFragmentToEditDataFragment(productId)
+    private fun goToProduct(productId: String) {
+        val action = InventoryFragmentDirections.actionInventoryFragmentToViewProductFragment(productId)
         requireView().findNavController().navigate(action)
     }
 }

@@ -14,10 +14,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import layout.com.example.laboratoriodedispositivosmoviles.Product
 import layout.com.example.laboratoriodedispositivosmoviles.ProductDatabase
-import layout.com.example.laboratoriodedispositivosmoviles.ProductParser
 import kotlin.coroutines.CoroutineContext
 
-private const val PRODUCT = "product"
+private const val PRODUCT_ID = "productId"
 
 class EditDataFragment : Fragment(), CoroutineScope {
     private var job: Job = Job()
@@ -29,12 +28,11 @@ class EditDataFragment : Fragment(), CoroutineScope {
 
     private lateinit var productDatabase: ProductDatabase
     private lateinit var productId: String
-    private var product: Product? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            productId = it.getString(PRODUCT).toString()
+            productId = it.getString(PRODUCT_ID).toString()
         }
     }
 
@@ -52,6 +50,8 @@ class EditDataFragment : Fragment(), CoroutineScope {
         productDatabase = ProductDatabase(requireActivity())
 
         launch { getProductData() }
+
+        binding.buttonSalir.setOnClickListener { goToProduct() }
     }
 
     override fun onDestroy() {
@@ -61,55 +61,52 @@ class EditDataFragment : Fragment(), CoroutineScope {
     }
 
     private suspend fun getProductData() {
-        product = productDatabase.getProduct(productId)
+        val product = productDatabase.getProduct(productId)
         if (product == null) {
             Toast.makeText(activity, "No se encontró el producto escaneado", Toast.LENGTH_SHORT).show()
-            exit()
+            goToProduct()
         } else {
-            initFormWithData(product!!)
+            initFormWithData(product)
         }
     }
 
     private fun initFormWithData(product: Product) {
         binding.editTextNombre.setText(product.name)
-        binding.editTextCantidad.setText(product.quantity.toString())
         binding.editTextTipo.setText(product.type)
         binding.editTextPrecio.setText(product.price.toString())
         binding.editTextObservaciones.setText(product.details)
 
-        binding.buttonSiguiente.setOnClickListener { editData() }
-        binding.buttonSalir.setOnClickListener { exit() }
+        binding.buttonSiguiente.setOnClickListener { editData(product) }
     }
 
-    private fun editData() {
+    private fun editData(product: Product) {
         val nombre = binding.editTextNombre.text.toString()
-        val cantidad = binding.editTextCantidad.text.toString().toIntOrNull()
         val tipo = binding.editTextTipo.text.toString()
         val precio = binding.editTextPrecio.text.toString().toDoubleOrNull()
         val observaciones = binding.editTextObservaciones.text.toString()
 
-        if (nombre.isNotEmpty() && cantidad != null && tipo.isNotEmpty() &&
+        if (nombre.isNotEmpty() && tipo.isNotEmpty() &&
             precio != null && observaciones.isNotEmpty()) {
-            val product = Product(productId,
-                product!!.image,
+            val modifiedProduct = Product(productId,
+                product.image,
                 nombre,
-                cantidad,
+                product.quantity,
                 tipo,
                 precio,
                 observaciones)
 
-            goNext(product)
+            saveChanges(modifiedProduct)
         }
     }
 
-    private fun goNext(product: Product) {
-        val parsedProduct = ProductParser.parseProductToJson(product)
-        val action = EditDataFragmentDirections.actionEditDataFragmentToEditImageFragment(parsedProduct)
-        requireView().findNavController().navigate(action)
+    private fun saveChanges(product: Product) {
+        productDatabase.setProduct(productId, product)
+
+        goToProduct()
     }
 
-    private fun exit() {
-        val action = EditDataFragmentDirections.actionEditDataFragmentToInventoryFragment()
+    private fun goToProduct() {
+        val action = EditDataFragmentDirections.actionEditDataFragmentToViewProductFragment(productId)
         requireView().findNavController().navigate(action)
     }
 }

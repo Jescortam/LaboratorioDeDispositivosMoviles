@@ -9,7 +9,8 @@
     <RelativeLayout
         android:paddingHorizontal="20dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:ignore="UselessParent">
 
         <TextView
             android:id="@+id/textViewAgregar"
@@ -35,8 +36,7 @@
                 android:layout_centerVertical="true"
                 android:textSize="20sp"
                 android:textColor="@color/black"
-                android:text="@string/nombre_label"
-                android:labelFor="@id/editTextNombre"/>
+                android:text="@string/nombre_label"/>
 
             <EditText
                 android:id="@+id/editTextNombre"
@@ -51,38 +51,8 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/cantidadLayout"
-            android:layout_below="@id/nombreLayout"
-            android:layout_marginTop="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/textViewCantidad"
-                android:layout_width="100dp"
-                android:layout_marginEnd="10dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:textSize="20sp"
-                android:textColor="#000000"
-                android:text="@string/cantidad_label"
-                android:labelFor="@id/editTextCantidad"/>
-
-            <EditText
-                android:id="@+id/editTextCantidad"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_toEndOf="@id/textViewCantidad"
-                android:layout_alignParentEnd="true"
-                android:ems="10"
-                android:inputType="number"
-                android:hint="@string/cantidad_hint"
-                android:autofillHints="false" />
-        </RelativeLayout>
-
-        <RelativeLayout
             android:id="@+id/tipoLayout"
-            android:layout_below="@+id/cantidadLayout"
+            android:layout_below="@+id/nombreLayout"
             android:layout_marginTop="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -95,8 +65,7 @@
                 android:layout_centerVertical="true"
                 android:textSize="20sp"
                 android:textColor="@color/black"
-                android:text="@string/tipo_label"
-                android:labelFor="@id/editTextTipo"/>
+                android:text="@string/tipo_label"/>
 
             <EditText
                 android:id="@+id/editTextTipo"
@@ -125,8 +94,7 @@
                 android:layout_centerVertical="true"
                 android:textSize="20sp"
                 android:textColor="@color/black"
-                android:text="@string/precio_label"
-                android:labelFor="@id/editTextPrecio"/>
+                android:text="@string/precio_label"/>
 
             <EditText
                 android:id="@+id/editTextPrecio"
@@ -153,8 +121,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:textColor="@color/black"
-                android:text="@string/observaciones_label"
-                android:labelFor="@id/editTextObservaciones"/>
+                android:text="@string/observaciones_label"/>
 
             <EditText
                 android:id="@+id/editTextObservaciones"
@@ -180,7 +147,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/orange_200"
                 android:layout_alignParentStart="true"
-                android:text="@string/salir"
+                android:text="@string/atras"
                 android:textColor="@color/black"
                 app:cornerRadius="20dp" />
 
@@ -189,7 +156,7 @@
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:text="@string/siguiente"
+                android:text="@string/editar"
                 app:cornerRadius="20dp" />
         </RelativeLayout>
     </RelativeLayout>

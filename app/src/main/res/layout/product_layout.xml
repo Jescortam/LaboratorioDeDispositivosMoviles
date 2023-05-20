@@ -48,22 +48,10 @@
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/productTypeTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/productQuantityTextView"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="5dp"
-            android:layout_toEndOf="@+id/productImageView"
-            android:text="@string/tipo_ejemplo"
-            android:textColor="#555555"
-            android:textSize="15sp" />
-
-        <TextView
             android:id="@+id/productPriceTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/productTypeTextView"
+            android:layout_below="@+id/productQuantityTextView"
             android:layout_marginStart="20dp"
             android:layout_marginTop="5dp"
             android:layout_toEndOf="@+id/productImageView"
@@ -72,10 +60,22 @@
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/productDetailsTextView"
+            android:id="@+id/productTypeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/productPriceTextView"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/productImageView"
+            android:text="@string/tipo_ejemplo"
+            android:textColor="#555555"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/productDetailsTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/productTypeTextView"
             android:layout_marginStart="20dp"
             android:layout_marginTop="5dp"
             android:layout_toEndOf="@+id/productImageView"
