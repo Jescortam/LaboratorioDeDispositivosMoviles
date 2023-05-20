@@ -1,7 +1,5 @@
-package layout.com.example.laboratoriodedispositivosmoviles
+package com.example.laboratoriodedispositivosmoviles
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import com.google.firebase.database.ChildEventListener
@@ -10,7 +8,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import layout.ProductAdapter
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -32,7 +29,8 @@ class ProductDatabase(val activity: FragmentActivity) {
                 while (i < adapter.products.size) {
                     if (adapter.products[i].id == dataSnapshot.key) {
                         val data = dataSnapshot.value as HashMap<*, *>
-                        adapter.products[i] = ProductParser.parseProductFromHashMap(dataSnapshot.key!!, data)
+                        adapter.products[i] =
+                            ProductParser.parseProductFromHashMap(dataSnapshot.key!!, data)
                         adapter.notifyItemChanged(i)
                         break
                     }
@@ -65,7 +63,6 @@ class ProductDatabase(val activity: FragmentActivity) {
     suspend fun getProduct(productId: String): Product? = suspendCoroutine { continuation ->
         var data: HashMap<*, *>
         val productRef = productDatabase.child(productId)
-        Log.d(TAG, productId)
         productRef.get().addOnSuccessListener {
             if (it.value != null) {
                 data = it.value as HashMap<*, *>

@@ -1,4 +1,4 @@
-package layout
+package com.example.laboratoriodedispositivosmoviles
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -10,10 +10,8 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
-import com.example.laboratoriodedispositivosmoviles.R
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import layout.com.example.laboratoriodedispositivosmoviles.Product
 import layout.com.example.laboratoriodedispositivosmoviles.ProductCardClickListener
 
 class ProductAdapter(var products: ArrayList<Product>, private val productCardClickListener: ProductCardClickListener): RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
@@ -66,5 +64,4 @@ class ProductAdapter(var products: ArrayList<Product>, private val productCardCl
     }
 
     override fun getItemCount() = products.size
-
 }

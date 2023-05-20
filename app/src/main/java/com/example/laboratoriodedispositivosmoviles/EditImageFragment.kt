@@ -21,7 +21,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import layout.com.example.laboratoriodedispositivosmoviles.ImageStorageHandler
-import layout.com.example.laboratoriodedispositivosmoviles.ProductDatabase
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*

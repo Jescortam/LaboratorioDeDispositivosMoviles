@@ -1,9 +1,7 @@
 package com.example.laboratoriodedispositivosmoviles
 
 import android.annotation.SuppressLint
-import android.content.ContentValues.TAG
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,8 +14,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import layout.com.example.laboratoriodedispositivosmoviles.ImageStorageHandler
-import layout.com.example.laboratoriodedispositivosmoviles.Product
-import layout.com.example.laboratoriodedispositivosmoviles.ProductDatabase
 import kotlin.coroutines.CoroutineContext
 
 private const val PRODUCT_ID = "productId"
@@ -67,7 +63,6 @@ class ViewProductFragment : Fragment(), CoroutineScope {
     private suspend fun getProductData() {
         val product = productDatabase.getProduct(productId)
         if (product != null) {
-            Log.d(TAG, product.toString())
             initViewsWithData(product)
         } else {
             Toast.makeText(activity, "No se encontró el producto.", Toast.LENGTH_SHORT).show()
@@ -88,12 +83,18 @@ class ViewProductFragment : Fragment(), CoroutineScope {
         val imageView = binding.imageViewImagen
         imageStorageHandler.getImageFromStorageToImageView(pathString, imageView)
 
+        binding.buttonMovimientos.setOnClickListener { goToMovements() }
         binding.buttonEditarDetalles.setOnClickListener { goToEditData() }
         binding.buttonEditarImagen.setOnClickListener { goToEditImage() }
         binding.buttonVerQr.setOnClickListener { goToGetQr() }
     }
 
-    private fun goToEditData() {
+    private fun goToMovements() {
+        val action = ViewProductFragmentDirections.actionViewProductFragmentToProductMovementFragment(productId)
+        requireView().findNavController().navigate(action)
+    }
+
+ private fun goToEditData() {
         val action = ViewProductFragmentDirections.actionViewProductFragmentToEditDataFragment(productId)
         requireView().findNavController().navigate(action)
     }

@@ -7,9 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.example.laboratoriodedispositivosmoviles.databinding.FragmentAddDataBinding
-import layout.com.example.laboratoriodedispositivosmoviles.Product
-import layout.com.example.laboratoriodedispositivosmoviles.ProductParser
 import java.util.*
+import kotlin.collections.ArrayList
 
 class AddDataFragment : Fragment() {
     private var _binding: FragmentAddDataBinding? = null
@@ -45,13 +44,18 @@ class AddDataFragment : Fragment() {
 
         if (nombre.isNotEmpty() && cantidad != null && tipo.isNotEmpty() &&
             precio != null && observaciones.isNotEmpty()) {
+            val operations: MutableList<Operation> = ArrayList()
+            operations.add(Operation(UUID.randomUUID().toString(), "", Date(), cantidad))
+
             val product = Product(id,
                 "",
                 nombre,
                 cantidad,
                 tipo,
                 precio,
-                observaciones)
+                observaciones,
+                arrayListOf()
+            )
 
             goNext(product)
         }

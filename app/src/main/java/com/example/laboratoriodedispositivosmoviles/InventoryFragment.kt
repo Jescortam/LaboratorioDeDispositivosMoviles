@@ -20,10 +20,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import layout.ProductAdapter
-import layout.com.example.laboratoriodedispositivosmoviles.InventoryMovementHandler
 import layout.com.example.laboratoriodedispositivosmoviles.ProductCardClickListener
-import layout.com.example.laboratoriodedispositivosmoviles.ProductDatabase
 import kotlin.coroutines.CoroutineContext
 
 class InventoryFragment : Fragment(), ProductCardClickListener, CoroutineScope {
@@ -38,7 +35,6 @@ class InventoryFragment : Fragment(), ProductCardClickListener, CoroutineScope {
     private lateinit var productDatabase: ProductDatabase
     private lateinit var adapter: ProductAdapter
     private lateinit var requestLabel: String
-    private lateinit var inventoryMovementHandler: InventoryMovementHandler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +63,6 @@ class InventoryFragment : Fragment(), ProductCardClickListener, CoroutineScope {
         productDatabase = ProductDatabase(requireActivity())
         productDatabase.setChildEventListener(adapter)
 
-        inventoryMovementHandler = InventoryMovementHandler(requireActivity())
 
         binding.logoutButton.setOnClickListener { logout() }
         binding.agregarButton.setOnClickListener { addProduct() }
@@ -126,7 +121,11 @@ class InventoryFragment : Fragment(), ProductCardClickListener, CoroutineScope {
     }
 
     private suspend fun sellProductUnit(productId: String) {
-        inventoryMovementHandler.subtract(productId, 1)
+        val product = productDatabase.getProduct(productId)
+        if (product != null) {
+            val inventoryMovementHandler = OperationDatabase(requireActivity(), product)
+            inventoryMovementHandler.makeOperation(-1)
+        }
     }
 
     override fun onProductCardClick(productId: String) {

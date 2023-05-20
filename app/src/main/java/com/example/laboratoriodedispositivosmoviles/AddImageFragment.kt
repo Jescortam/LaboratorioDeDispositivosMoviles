@@ -128,8 +128,15 @@ class AddImageFragment : Fragment(), CoroutineScope {
         val imageStorage = ImageStorageHandler(requireActivity())
         val pathString = imageStorage.uploadImage(imageUri, product.id)
 
+        // So it doesn't double
+        val quantity = product.quantity
+        product.quantity = 0
+
         product.image = pathString
         productDatabase.setProduct(product.id, product)
+
+        val operationDatabase = OperationDatabase(requireActivity(), product)
+        operationDatabase.makeOperation(quantity)
 
         goToProduct(product.id)
     }

@@ -68,4 +68,7 @@
     <string name="zero">0</string>
     <string name="detalles">Detalles:</string>
     <string name="movimientos">Movimientos</string>
+    <string name="fecha">01/01/01 – 01:01am</string>
+    <string name="cantidad">200 unidades</string>
+    <string name="operador">Entrada</string>
 </resources>

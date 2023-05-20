@@ -1,7 +1,8 @@
-package layout.com.example.laboratoriodedispositivosmoviles
+package com.example.laboratoriodedispositivosmoviles
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.util.ArrayList
 
 class ProductParser {
     companion object {
@@ -14,12 +15,13 @@ class ProductParser {
 
             return Product(
                 id,
-                data["image"] as String,
-                data["name"] as String,
+                data["image"].toString(),
+                data["name"].toString(),
                 (data["quantity"] as Long).toInt(),
-                data["type"] as String,
+                data["type"].toString(),
                 price,
-                data["details"] as String,
+                data["details"].toString(),
+                ArrayList()
             )
         }
 

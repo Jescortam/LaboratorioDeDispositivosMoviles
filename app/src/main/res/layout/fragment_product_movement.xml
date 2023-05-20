@@ -23,6 +23,7 @@
                 android:text="@string/movimientos" />
 
             <RelativeLayout
+                android:id="@+id/operationButtons"
                 android:layout_marginVertical="40dp"
                 android:layout_below="@id/textViewMovimientos"
                 android:layout_width="wrap_content"
@@ -58,6 +59,15 @@
                     app:cornerRadius="20dp" />
             </RelativeLayout>
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/operationButtons"
+                android:layout_above="@id/navButtonsLayout"
+                android:layout_marginBottom="20dp"
+                android:orientation="vertical" />
+
             <RelativeLayout
                 android:id="@+id/navButtonsLayout"
                 android:layout_alignParentBottom="true"
@@ -75,6 +85,7 @@
                     android:textColor="@color/black"
                     app:cornerRadius="20dp" />
             </RelativeLayout>
+
         </RelativeLayout>
 
 </FrameLayout>
