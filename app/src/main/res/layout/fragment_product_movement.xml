@@ -23,12 +23,38 @@
                 android:text="@string/movimientos" />
 
             <RelativeLayout
+                android:id="@+id/unidadesActualesLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_below="@id/textViewMovimientos">
+                <TextView
+                    android:id="@+id/labelUnidadesActuales"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:text="@string/unidades_actuales"/>
+
+                <TextView
+                    android:id="@+id/valueUnidadesActuales"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/labelUnidadesActuales"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/zero"/>
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/operationButtons"
-                android:layout_marginVertical="40dp"
-                android:layout_below="@id/textViewMovimientos"
+                android:layout_marginVertical="30dp"
+                android:layout_below="@id/unidadesActualesLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <EditText
+                    android:id="@+id/editTextUnidades"
                     android:layout_width="170dp"
                     android:layout_height="100dp"
                     android:hint="@string/zero"

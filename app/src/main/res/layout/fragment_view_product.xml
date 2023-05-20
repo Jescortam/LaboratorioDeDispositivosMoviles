@@ -30,6 +30,7 @@
             android:layout_height="180dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="15dp"
+            android:padding="1dp"
             android:background="@drawable/border"
             app:srcCompat="@drawable/blank"
             android:contentDescription="@string/imagen_del_consumible" />

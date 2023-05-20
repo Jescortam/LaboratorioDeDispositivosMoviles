@@ -2,6 +2,7 @@ package com.example.laboratoriodedispositivosmoviles
 
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -14,14 +15,15 @@ import kotlin.coroutines.suspendCoroutine
 class ProductDatabase(val activity: FragmentActivity) {
     private var productDatabase: DatabaseReference = Firebase.database.getReference("products")
 
-    fun setChildEventListener(adapter: ProductAdapter) {
+    fun setChildEventListener(adapter: ProductAdapter, recyclerView: RecyclerView) {
         val childEventListener = object : ChildEventListener {
             override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
                 val data = dataSnapshot.value as HashMap<*, *>
                 val product = ProductParser.parseProductFromHashMap(dataSnapshot.key!!, data)
 
-                adapter.products += product
-                adapter.notifyItemInserted(adapter.products.size - 1)
+                adapter.products = (arrayListOf(product) + adapter.products) as ArrayList<Product>
+                adapter.notifyItemInserted(0)
+                recyclerView.scrollToPosition(0)
             }
 
             override fun onChildChanged(dataSnapshot: DataSnapshot, previousChildName: String?) {

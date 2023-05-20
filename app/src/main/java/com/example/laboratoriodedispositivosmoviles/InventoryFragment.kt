@@ -60,8 +60,10 @@ class InventoryFragment : Fragment(), ProductCardClickListener, CoroutineScope {
             return
         }
 
+        val recyclerView = binding.recyclerView
+
         productDatabase = ProductDatabase(requireActivity())
-        productDatabase.setChildEventListener(adapter)
+        productDatabase.setChildEventListener(adapter, recyclerView)
 
 
         binding.logoutButton.setOnClickListener { logout() }
@@ -69,8 +71,8 @@ class InventoryFragment : Fragment(), ProductCardClickListener, CoroutineScope {
         binding.escanearButton.setOnClickListener { scanAndView() }
         binding.venderButton.setOnClickListener { scanAndSell() }
 
-        binding.recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        binding.recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+        recyclerView.adapter = adapter
     }
 
     override fun onDestroy() {

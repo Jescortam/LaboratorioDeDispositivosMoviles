@@ -2,6 +2,7 @@ package com.example.laboratoriodedispositivosmoviles
 
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -13,14 +14,15 @@ class OperationDatabase(private val activity: FragmentActivity, val product: Pro
     private val productDatabase = ProductDatabase(activity)
     private val operationDatabase = Firebase.database.getReference("products/${product.id}/operations")
 
-    fun setChildEventListener(adapter: OperationAdapter) {
+    fun setChildEventListener(adapter: OperationAdapter, recyclerView: RecyclerView) {
         val childEventListener = object : ChildEventListener {
             override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
                 val data = dataSnapshot.value as HashMap<*, *>
                 val operation = OperationParser.parseOperationFromHashMap(dataSnapshot.key!!, data)
 
-                adapter.operations += operation
-                adapter.notifyItemInserted(adapter.operations.size - 1)
+                adapter.operations = (arrayListOf(operation) + adapter.operations) as ArrayList<Operation>
+                adapter.notifyItemInserted(0)
+                recyclerView.scrollToPosition(0)
             }
 
             override fun onChildChanged(dataSnapshot: DataSnapshot, previousChildName: String?) {
@@ -69,8 +71,8 @@ class OperationDatabase(private val activity: FragmentActivity, val product: Pro
 
             product.operations += Operation(id, "", Date(), units)
             product.quantity += units
-        }
 
-        productDatabase.setProduct(product.id, product)
+            productDatabase.setProduct(product.id, product)
+        }
     }
 }
