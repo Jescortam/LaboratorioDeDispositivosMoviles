@@ -46,7 +46,6 @@ class ProductMovementFragment : Fragment(), CoroutineScope {
 
         launch { getProduct() }
 
-        binding.editTextUnidades.setText("0")
         binding.buttonSalir.setOnClickListener { goToProduct() }
     }
 

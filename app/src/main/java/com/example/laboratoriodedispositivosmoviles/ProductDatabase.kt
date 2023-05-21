@@ -1,5 +1,7 @@
 package com.example.laboratoriodedispositivosmoviles
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -81,10 +83,19 @@ class ProductDatabase(val activity: FragmentActivity) {
     }
 
     fun setProduct(productId: String, product: Product) {
-        productDatabase.child(productId).setValue(product).addOnCompleteListener {
+        Log.d(TAG, product.operations.toString())
+        productDatabase.child(productId).setValue(product).addOnSuccessListener {
             Toast.makeText(activity, "Producto editado de manera exitosa", Toast.LENGTH_SHORT).show()
         }.addOnFailureListener {
             Toast.makeText(activity, "Error en la edición del producto", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun deleteProduct(productId: String) {
+        productDatabase.child(productId).setValue(null).addOnSuccessListener {
+            Toast.makeText(activity, "Producto eliminado de manera exitosa", Toast.LENGTH_SHORT).show()
+        }.addOnFailureListener {
+            Toast.makeText(activity, "Error en la eliminación del producto", Toast.LENGTH_SHORT).show()
         }
     }
 }

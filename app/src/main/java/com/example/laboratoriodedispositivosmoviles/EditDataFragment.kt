@@ -1,6 +1,8 @@
 package com.example.laboratoriodedispositivosmoviles
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -82,6 +84,7 @@ class EditDataFragment : Fragment(), CoroutineScope {
         val tipo = binding.editTextTipo.text.toString()
         val precio = binding.editTextPrecio.text.toString().toDoubleOrNull()
         val observaciones = binding.editTextObservaciones.text.toString()
+        Log.d(TAG, product.operations.toString())
 
         if (nombre.isNotEmpty() && tipo.isNotEmpty() &&
             precio != null && observaciones.isNotEmpty()) {

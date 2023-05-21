@@ -158,11 +158,22 @@
             android:layout_height="wrap_content">
 
             <Button
+                android:id="@+id/buttonVerQr"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_alignParentEnd="true"
+                android:backgroundTint="@color/orange_700"
+                android:text="@string/obtener_qr"
+                android:textSize="20sp"
+                app:cornerRadius="20dp" />
+
+            <Button
                 android:id="@+id/buttonMovimientos"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginBottom="20dp"
                 android:backgroundTint="@color/orange_700"
+                android:layout_below="@+id/buttonVerQr"
                 android:layout_alignParentStart="true"
                 android:text="@string/movimientos"
                 android:textColor="@color/white"
@@ -185,7 +196,6 @@
                 android:layout_width="170dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/buttonMovimientos"
-
                 android:layout_alignParentEnd="true"
                 android:text="@string/editar_imagen"
                 app:cornerRadius="20dp" />
@@ -202,13 +212,13 @@
                 app:cornerRadius="20dp" />
 
             <Button
-                android:id="@+id/buttonVerQr"
+                android:id="@+id/buttonBorrarProducto"
                 android:layout_width="170dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/buttonEditarImagen"
                 android:layout_alignParentEnd="true"
-                android:backgroundTint="@color/orange_700"
-                android:text="@string/descargar_qr"
+                android:backgroundTint="@color/orange_500"
+                android:text="@string/eliminar"
                 app:cornerRadius="20dp" />
         </RelativeLayout>
     </RelativeLayout>

@@ -72,4 +72,9 @@
     <string name="cantidad">200 unidades</string>
     <string name="operador">Entrada</string>
     <string name="unidades_actuales">Unidades actuales:</string>
+    <string name="borrar_producto">Borrar producto</string>
+    <string name="eliminar">Eliminar</string>
+    <string name="obtener_qr">Obtener QR</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="confirmacion_de_borrado">Está seguro de querer borrar el producto?</string>
 </resources>

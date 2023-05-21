@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.example.laboratoriodedispositivosmoviles.databinding.FragmentViewProductBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -87,6 +88,24 @@ class ViewProductFragment : Fragment(), CoroutineScope {
         binding.buttonEditarDetalles.setOnClickListener { goToEditData() }
         binding.buttonEditarImagen.setOnClickListener { goToEditImage() }
         binding.buttonVerQr.setOnClickListener { goToGetQr() }
+        binding.buttonBorrarProducto.setOnClickListener { showAlertDialog(product) }
+    }
+
+    private fun showAlertDialog(product: Product) {
+        MaterialAlertDialogBuilder(requireActivity())
+            .setTitle("Eliminar producto")
+            .setMessage("Está seguro de querer eliminar el producto?")
+            .setNegativeButton("Cancelar") { _, _ -> }
+            .setPositiveButton("Eliminar") { _, _ -> deleteProduct(product) }
+            .show()
+    }
+
+    private fun deleteProduct(product: Product) {
+        val imageStorageHandler = ImageStorageHandler(requireActivity())
+        launch { imageStorageHandler.deleteImage(product.image) }
+
+        productDatabase.deleteProduct(productId)
+        goToInventory()
     }
 
     private fun goToMovements() {
@@ -94,7 +113,7 @@ class ViewProductFragment : Fragment(), CoroutineScope {
         requireView().findNavController().navigate(action)
     }
 
- private fun goToEditData() {
+    private fun goToEditData() {
         val action = ViewProductFragmentDirections.actionViewProductFragmentToEditDataFragment(productId)
         requireView().findNavController().navigate(action)
     }

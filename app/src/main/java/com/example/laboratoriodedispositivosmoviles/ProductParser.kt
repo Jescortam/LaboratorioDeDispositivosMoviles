@@ -1,12 +1,18 @@
 package com.example.laboratoriodedispositivosmoviles
 
+import com.example.laboratoriodedispositivosmoviles.OperationParser.Companion.parseOperationsFromHashMap
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import java.util.ArrayList
+import kotlin.collections.ArrayList
 
 class ProductParser {
     companion object {
         fun parseProductFromHashMap(id: String, data: HashMap<*, *>): Product {
+            var operations = ArrayList<Operation>()
+            if (data["operations"] != null) {
+                operations = parseOperationsFromHashMap(data["operations"] as ArrayList<HashMap<*, *>>)
+            }
+
             val price: Double = if (data["price"] is Long) {
                 (data["price"] as Long).toDouble()
             } else {
@@ -21,7 +27,7 @@ class ProductParser {
                 data["type"].toString(),
                 price,
                 data["details"].toString(),
-                ArrayList()
+                operations
             )
         }
 
