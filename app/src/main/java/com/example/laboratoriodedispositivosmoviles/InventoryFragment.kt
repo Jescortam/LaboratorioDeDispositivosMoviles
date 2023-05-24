@@ -1,7 +1,9 @@
 package com.example.laboratoriodedispositivosmoviles
 
 import android.app.Activity
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -110,11 +112,17 @@ class InventoryFragment : Fragment(), ProductCardClickListener, CoroutineScope {
 
     private suspend fun handleResult(result: ActivityResult) {
         if (result.resultCode == Activity.RESULT_OK && result.data != null) {
-            val data = result.data.toString()
-            if (requestLabel == "VIEW") {
-                goToProduct(data)
-            } else if (requestLabel == "SELL") {
-                sellProductUnit(data)
+            val id = result.data!!.getStringExtra("SCAN_RESULT")
+            if (id != null) {
+                if (!id.contains('.') && !id.contains('#') && !id.contains('$') && !id.contains('[') && !id.contains(']')) {
+                    if (requestLabel == "VIEW") {
+                        goToProduct(id)
+                    } else if (requestLabel == "SELL") {
+                        sellProductUnit(id)
+                    }
+                } else {
+                    Toast.makeText(requireActivity(), "No es un código valido", Toast.LENGTH_SHORT).show()
+                }
             }
         } else {
             Toast.makeText(activity, "Operación cancelada", Toast.LENGTH_SHORT).show()

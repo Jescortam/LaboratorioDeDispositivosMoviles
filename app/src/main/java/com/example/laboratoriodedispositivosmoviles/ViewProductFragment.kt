@@ -14,7 +14,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import layout.com.example.laboratoriodedispositivosmoviles.ImageStorageHandler
 import kotlin.coroutines.CoroutineContext
 
 private const val PRODUCT_ID = "productId"

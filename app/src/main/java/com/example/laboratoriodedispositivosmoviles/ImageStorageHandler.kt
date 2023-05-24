@@ -1,4 +1,4 @@
-package layout.com.example.laboratoriodedispositivosmoviles
+package com.example.laboratoriodedispositivosmoviles
 
 import android.net.Uri
 import android.widget.ImageView
