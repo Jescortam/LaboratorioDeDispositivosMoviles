@@ -34,7 +34,7 @@ con la fotografía seleccionada, entonces podremos seleccionar nuestro botón de
 Es importante saber que al seleccionar el botón de “AGREGAR” es normal que nuestro sistema tarde unos segundos procesando para seguir avanzando, esto es debido a nuestras 
 bases de datos siendo actualizadas.  
 
-![image](https://github.com/Jescortam/imprenta-express/assets/69122617/2d8c2792-3b41-4a8b-a346-6a88bd2fe711)
+![Agregar imagen](https://github.com/Jescortam/imprenta-express/assets/69122617/2d8c2792-3b41-4a8b-a346-6a88bd2fe711)
 
 ### Ver producto
 Esta vista nos permite ver a detalle los datos de un consumible. Esta vista también tiene distintos botones. El primer botón que nos encontramos es “OBTENER QR” que nos 
@@ -42,7 +42,7 @@ despliega nuestro código QR para poder descargarlo si lo vemos necesario. El bo
 imagen nos enviarán de vuelta a un menú parecido a agregar consumible, pero con el propósito de cambiar los atributos que le hayamos asignado a esta. Finalmente tenemos los 
 botones de salir, que te devuelve a la pantalla de inventario, y eliminar, que elimina nuestro consumible.  
 
-![Ver producto](https://github.com/Jescortam/imprenta-express/assets/69122617/d21b65cf-c06b-492c-a8e1-e874557aa4cb)
+![Ver producto](https://github.com/Jescortam/imprenta-express/assets/69122617/0a882cb4-a923-4fb6-92e7-2fc404d829f8)
 
 ### Obtener QR
 En esta vista podremos observar nuestro código QR de consumible, el cual podremos descargar o tomar screenshot para poder usarlo como queramos.  
@@ -56,7 +56,7 @@ ingresar un número para luego seleccionar el botón de “Agregar”, o “Rest
 la cual es registrada e informada en la misma pantalla como una lista que incluye la fecha y la hora del movimiento, la cantidad de consumibles, y el tipo de cambio que se 
 hizo, en este caso si es de entrada o salida. Si las unidades son cero o son negativas, nuestro código no permite que se realice la operación.  
 
-![Movimientos](https://github.com/Jescortam/imprenta-express/assets/69122617/fc4f327b-257e-4954-83cd-200e826a7ed2)
+![Movimientos](https://github.com/Jescortam/imprenta-express/assets/69122617/b8b793b5-bcfe-44aa-a529-1e5cdc24c2b1)
 
 ### Editar información
 Esta vista se puede sobrescribir todos los valores que se ingresaron en la vista de “agregar consumible”, con la excepción de la cantidad, debido a que esta solo se modifica 
@@ -74,9 +74,9 @@ nuestra imagen, ahora tendremos nuestra imagen actual en el cuadro y podremos ut
 Nuestro escáner tiene la siguiente vista, y es para leer nuestros códigos QR que contengan los códigos de nuestros productos, y que también nos permite realizar la venta 
 de una unidad de un consumible.  
 
-![Escáner](https://github.com/Jescortam/imprenta-express/assets/69122617/f24528b1-863b-49f1-8f8d-a214eeb0ec10)
+![Escáner](https://github.com/Jescortam/imprenta-express/assets/69122617/40038963-f0c0-42ab-9136-adc8e3a86f8d)
 
 ### Eliminar
 Al hacer clic en el botón de eliminar nos aparecerá un diálogo para confirmar la selección, podremos cancelar o volver a seleccionar eliminar para borrar nuestro producto.  
 
-![Eliminar](https://github.com/Jescortam/imprenta-express/assets/69122617/eb00f0f9-4dba-435a-837f-91aa84ba6e3d)
+![Eliminar](https://github.com/Jescortam/imprenta-express/assets/69122617/c3e9332c-4344-4621-bb5e-fcc5104d8251)
