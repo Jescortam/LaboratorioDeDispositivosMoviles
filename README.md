@@ -16,7 +16,7 @@ QR, el tercero nos sirve para vender una unidad de producto, y el cuarto botón 
 en la cual encontramos los consumibles de nuestro almacén con los datos de: nombre, cantidad, precio, tipo, observaciones y su imagen. Esta lista de consumibles se actualiza 
 en tiempo real, y al hacer clic sobre algún consumible de la lista nos enviará a su menú como vista “ver producto”.  
 
-![Inventario](https://github.com/Jescortam/imprenta-express/assets/69122617/d9019374-7f86-43e4-a475-890c117bad03)
+![Inventario](https://github.com/Jescortam/imprenta-express/assets/69122617/00cfd505-2d7e-43f4-9c29-261aa151d74b)
 
 ### Agregar consumible
 En esta vista registramos los datos del consumible que queremos agregar, al terminar de ingresar la información requerida, podemos presionar siguiente para continuar a 
@@ -24,7 +24,7 @@ En esta vista registramos los datos del consumible que queremos agregar, al term
 esta pantalla será la cantidad inicial de consumible que tendremos en nuestro inventario, y esta podrá ser modificada posteriormente en nuestra aplicación para añadir o 
 restarle unidades.  
 
-![Agregar consumible](https://github.com/Jescortam/imprenta-express/assets/69122617/f6cf13d8-a9d7-464e-8842-669b00f48248)
+![Agregar consumible](https://github.com/Jescortam/imprenta-express/assets/69122617/c453a1b6-1c5c-4176-9799-f2b25c060d4b)
 
 ### Agregar imagen
 En esta pantalla podemos primeramente seleccionar dos botones, el primero que lee “CÁMARA”, nos habilitará la cámara de nuestro dispositivo para tomar una foto. El segundo 
@@ -34,7 +34,7 @@ con la fotografía seleccionada, entonces podremos seleccionar nuestro botón de
 Es importante saber que al seleccionar el botón de “AGREGAR” es normal que nuestro sistema tarde unos segundos procesando para seguir avanzando, esto es debido a nuestras 
 bases de datos siendo actualizadas.  
 
-![Agregar imagen](https://github.com/Jescortam/imprenta-express/assets/69122617/81563745-8ade-46da-949b-599a5e24a8d9)
+![image](https://github.com/Jescortam/imprenta-express/assets/69122617/2d8c2792-3b41-4a8b-a346-6a88bd2fe711)
 
 ### Ver producto
 Esta vista nos permite ver a detalle los datos de un consumible. Esta vista también tiene distintos botones. El primer botón que nos encontramos es “OBTENER QR” que nos 
