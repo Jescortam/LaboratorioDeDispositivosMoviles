@@ -8,7 +8,7 @@ el segundo campo contendrá la contraseña del usuario, al rellenar estos dos ca
 para continuar a nuestra pantalla de Inventario. Si las credenciales son inválidas, en la parte inferior de la pantalla habrá un mensaje que invite al usuario a intentarlo 
 nuevamente. Una vez sean válidas, se enviará al usuario a la vista de Inventario.  
 
-![Inicio de sesión](https://github.com/Jescortam/imprenta-express/assets/69122617/6d4c295a-38d2-4e60-ab84-8eb9dc13d145)
+![Iniciar sesión](https://github.com/Jescortam/imprenta-express/assets/69122617/feaa1ebf-ed52-4ca2-bf74-543c23d0d62e)
 
 ### Inventario 
 En esta vista tiene cuatro botones arriba, de izquierda a derecha, el primero sirve para ir a Agregar producto, el segundo es para ver nuestro producto utilizando un código 
@@ -47,7 +47,8 @@ botones de salir, que te devuelve a la pantalla de inventario, y eliminar, que e
 ### Obtener QR
 En esta vista podremos observar nuestro código QR de consumible, el cual podremos descargar o tomar screenshot para poder usarlo como queramos.  
 
-![Obtener QR](https://github.com/Jescortam/imprenta-express/assets/69122617/07b5da2c-a659-435d-a112-f169b4f53f9a)
+![Obtener QR](https://github.com/Jescortam/imprenta-express/assets/69122617/f0e113a6-a021-4017-83d1-20d81d028a1a)
+
 
 ### Movimientos
 La pantalla de movimientos, esta vista mostrará los elementos restantes de nuestro producto, tendrá la función de agregar o restar unidades según se requiera. Se debe de 
@@ -61,13 +62,13 @@ hizo, en este caso si es de entrada o salida. Si las unidades son cero o son neg
 Esta vista se puede sobrescribir todos los valores que se ingresaron en la vista de “agregar consumible”, con la excepción de la cantidad, debido a que esta solo se modifica 
 mediante la pantalla de Movimientos.  
 
-![Editar información](https://github.com/Jescortam/imprenta-express/assets/69122617/ab48311d-6438-4514-86d6-73636d908788)
+![Editar información](https://github.com/Jescortam/imprenta-express/assets/69122617/d8cb6290-048f-44af-9ec3-7365311de038)
 
 ### Editar imagen
 En esta vista podremos volver a seleccionar una fotografía para utilizar como indicador de nuestro objeto, en este caso no tenemos un cuadro vacío donde seleccionaremos 
 nuestra imagen, ahora tendremos nuestra imagen actual en el cuadro y podremos utilizar de nuevo la galería o la cámara para volver a definir nuestra imagen de consumible.  
 
-![Editar imagen](https://github.com/Jescortam/imprenta-express/assets/69122617/9f8b156b-2d8e-4f74-b0ed-24322d947955)
+![Editar imagen](https://github.com/Jescortam/imprenta-express/assets/69122617/0a182407-a414-4205-8d8d-08c8ac881c3b)
 
 ### Escáner
 Nuestro escáner tiene la siguiente vista, y es para leer nuestros códigos QR que contengan los códigos de nuestros productos, y que también nos permite realizar la venta 
